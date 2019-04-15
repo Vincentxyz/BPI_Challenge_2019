@@ -1,7 +1,7 @@
-CREATE VIEW PROM.EVENT_LOG_TWO_WAY_MATCHING
+CREATE VIEW PROM.Event_Log_INV_after_GR
 AS
 SELECT 
-case_table_two_way_matching.[_case_concept_name_]
+case_table_INV_after_GR.[_case_concept_name_]
       ,[_case_Spend_area_text_]
       ,[_case_Company_]
       ,[_case_Document_Type_]
@@ -26,6 +26,6 @@ case_table_two_way_matching.[_case_concept_name_]
 	  ,[Sorting]
 
  FROM 
-PTP.case_table_two_way_matching
-JOIN PTP.event_table_two_way_matching
-ON case_table_two_way_matching._case_concept_name_ = event_table_two_way_matching._case_concept_name_
+PTP.case_table_INV_after_GR
+JOIN PTP.event_table_INV_after_GR
+ON case_table_INV_after_GR._case_concept_name_ = event_table_INV_after_GR._case_concept_name_
