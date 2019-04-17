@@ -8,7 +8,7 @@ CREATE TABLE stg.event_table (
     ,  "_event_org_resource_" NVARCHAR(100)
     ,  "_event_Cumulative_net_worth__EUR__" NUMERIC(15,5)
     ,  "_event_time_timestamp_" DATETIME
-	,  "_event_ID__"
+	,  "_eventID__" NVARCHAR(100)
 );
 Go
 
@@ -26,7 +26,7 @@ CONVERT(DATETIME,
 SUBSTRING(_event_time_timestamp_,7,4) + '-' +
 SUBSTRING(_event_time_timestamp_,4,2) + '-' +
 SUBSTRING(_event_time_timestamp_,1,2) +
-SUBSTRING(_event_time_timestamp_,11,13),
-_event_ID__
-)
+SUBSTRING(_event_time_timestamp_,11,13)),
+_eventID__
+
 FROM [dbo].[OriginData]
