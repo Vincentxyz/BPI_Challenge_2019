@@ -1,4 +1,4 @@
-CREATE VIEW PTP.CLUSTER_02_02_INV_before_GR_withot_SRM
+CREATE VIEW PTP.CLUSTER_02_02_INV_before_GR_without_SRM
 AS SELECT Event_Log_All.*
 FROM PROM.Event_Log_All
 INNER JOIN PTP.Case_clustering
