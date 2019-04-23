@@ -11,6 +11,14 @@ CREATE TABLE PTP.case_clustering (
 );
 Go 
 
+ALTER TABLE PTP.case_clustering
+  ADD level_1_cluster_id NVARCHAR(100);
+  Go
+
+ALTER TABLE PTP.case_clustering
+  ADD level_2_cluster_id NVARCHAR(100);
+  Go
+
 INSERT INTO PTP.case_clustering (
 _case_concept_name_
 ) SELECT
