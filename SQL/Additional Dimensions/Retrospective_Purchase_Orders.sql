@@ -7,6 +7,8 @@ FROM PROM.Event_Log_All
 GROUP BY _case_concept_name_, _event_concept_name_
 HAVING _event_concept_name_ = 'Create Purchase Order Item'
 
+-- Find first invoice creation
+
 SELECT _case_concept_name_,
 		MIN(_event_time_timestamp_) AS First_Invoice_Record_Time
 INTO #Invoice_Creation
@@ -14,6 +16,7 @@ FROM PROM.Event_Log_All
 GROUP BY _case_concept_name_, _event_concept_name_
 HAVING _event_concept_name_ = 'Record Invoice Receipt'
 
+-- Find first GR creation
 
 SELECT _case_concept_name_,
 		MIN(_event_time_timestamp_) AS First_GR_Record_Time
@@ -21,22 +24,6 @@ INTO #GR_Creation
 FROM PROM.Event_Log_All
 GROUP BY _case_concept_name_, _event_concept_name_
 HAVING _event_concept_name_ = 'Record Goods Receipt'
-/*
-SELECT #PO_creation._case_concept_name_
-INTO #Retrospective_POIs_by_INV
-FROM #PO_Creation
-JOIN #Invoice_Creation 
-ON #PO_Creation._case_concept_name_ = #Invoice_Creation._case_concept_name_
-AND First_POI_Creation_Time >= First_Invoice_Record_Time
-
-
-SELECT #PO_creation._case_concept_name_
-INTO #Retrospective_POIs_by_GR
-FROM #PO_Creation
-JOIN #GR_Creation
-ON #PO_Creation._case_concept_name_ = #GR_Creation._case_concept_name_
-AND First_POI_Creation_Time >= First_GR_Record_Time
-*/
 
 SELECT 
 	Event_log_All._case_concept_name_
