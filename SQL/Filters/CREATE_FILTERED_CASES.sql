@@ -17,6 +17,8 @@ WHERE YEAR(_event_time_timestamp_) < 2018
 OR _event_time_timestamp_ > '2019-01-28';
 Go
 
+DELETE FROM stg.filtered_cases WHERE exclusion_reason <> 'Incomplete case (no payment)';
+Go
 
 -- Add cases without payment (incomplete cases)
 INSERT INTO stg.filtered_cases
@@ -26,9 +28,10 @@ _case_concept_name_,
 FROM stg.case_table
 WHERE _case_concept_name_ NOT IN 
 (select DISTINCT _case_concept_name_ FROM stg.event_table
-WHERE _event_concept_name_ = 'Clear Invoice');
+WHERE _event_concept_name_ = 'Clear Invoice')
+AND _case_Item_Category_ <> 'Consignment';
 Go
 
 
-CREATE INDEX ix_filtered_cases ON stg.case_table (_case_concept_name_);
+CREATE INDEX ix_filtered_cases ON stg.filtered_cases(_case_concept_name_);
 Go
