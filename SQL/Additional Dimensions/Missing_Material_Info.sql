@@ -8,7 +8,7 @@ select A._eventID__,
 		A._case_concept_name_,
 		A._event_concept_name_,
 		CASE WHEN B._case_Spend_area_text_ like '' or B._case_Sub_spend_area_text_ like '' THEN 1
-		 ELSE 0 END		AS Missing_material,
+		 ELSE 0 END		AS is_material_missing,
 		B._case_Spend_area_text_,
 		B._case_Sub_spend_area_text_,
 		B._case_Spend_classification_text_
