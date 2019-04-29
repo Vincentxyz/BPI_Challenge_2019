@@ -1,8 +1,8 @@
-DELETE FROM stg.filtered_cases WHERE exclusion_reason <> 'Incomplete case (no payment)';
+DELETE FROM stg.excluded_cases WHERE exclusion_reason <> 'Incomplete case (no payment)';
 Go
 
 -- Add timeframe exlusions
-INSERT INTO stg.filtered_cases
+INSERT INTO stg.excluded_cases
 SELECT DISTINCT
 _case_concept_name_,
 'Case not in extraction timeframe'

@@ -26,7 +26,8 @@ GROUP BY _case_concept_name_, _event_concept_name_
 HAVING _event_concept_name_ = 'Record Goods Receipt'
 
 SELECT 
-	Event_log_All._case_concept_name_
+	_event_ID__
+	, Event_log_All._case_concept_name_
 	  , _event_concept_name_
       , [_event_time_timestamp_]
 	 , CASE 
@@ -37,7 +38,7 @@ SELECT
 	 , #PO_Creation.First_POI_Creation_Time
 	 , #Invoice_Creation.First_Invoice_Record_Time
 	 , #GR_Creation.First_GR_Record_Time
-INTO DIM.Retrospective_PO_Items
+INTO DIM.event_retrospective_po_items
 FROM PROM.Event_Log_All
 LEFT JOIN #PO_Creation
 ON Event_Log_All._case_concept_name_ = #PO_Creation._case_concept_name_

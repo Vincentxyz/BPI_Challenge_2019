@@ -1,3 +1,6 @@
+DELETE FROM stg.excluded_cases WHERE exclusion_reason <> 'Incomplete case (GR < IR and Consignment)';
+Go
+
 SELECT  
       [_case_concept_name_],
 	  _case_item_category_,
@@ -13,35 +16,24 @@ SELECT
 	  INTO #sum_values
 	  from PROM.Event_Log_All
 	  group by _case_concept_name_,_case_item_category_
-	  
 
+-- Add cases with less GR than IR (Consignment)
+INSERT INTO stg.excluded_cases
 SELECT DISTINCT
-T1.*,
-	
-	  CASE
-	  -- Two way Matching
-	  WHEN T1.Sum_GR = 0 AND T1._case_item_category_<> '2-way match' THEN 0
-	  WHEN T1.Sum_IR=0 and T1._case_item_category_<> 'Consignment' THEN 0
-	  WHEN T1._case_item_category_='2-way match' and 
-	  T1.CreateOrder_NetVal=(T1.IR_NetVal-T1.CancelIR_NetVal)/T1.Sum_IR THEN 1
-	  WHEN  T1._case_item_category_='3-way match, invoice after GR' and
-  T1.CreateOrder_NetVal=(T1.IR_NetVal-T1.CancelIR_NetVal)/T1.Sum_IR
-    and (T1.IR_NetVal-T1.CancelIR_NetVal)=(T1.GR_NetVal-T1.CancelGR_NetVal)
-  and T1.Deviation=0
-  and T1.Sum_GR!=0 THEN 1
-	WHEN T1._case_item_category_='3-way match, invoice before GR' and
-  T1.CreateOrder_NetVal=(T1.IR_NetVal-T1.CancelIR_NetVal)/T1.Sum_IR
-  and (T1.IR_NetVal-T1.CancelIR_NetVal)=(T1.GR_NetVal-T1.CancelGR_NetVal)
-  and T1.Deviation=0
-  and T1.Sum_GR!=0 THEN 1
-	WHEN T1._case_item_category_='Consignment' and
-	T1.CreateOrder_NetVal = (T1.GR_NetVal-T1.CancelGR_NetVal)/T1.Sum_GR
-	THEN 1
-	ELSE 0
-  	  END AS is_compliant
+_case_concept_name_,
+'Incomplete case (GR < IR and Consignment)'
+FROM #sum_values
+WHERE Sum_GR < Sum_IR
+AND _case_item_category_ = 'Consignment'
+Go
 
-INTO stg.case_compliance
-FROM #sum_values T1
-
-CREATE INDEX ix_case_compliance ON stg.case_compliance(_case_concept_name_);
+-- Add cases with less GR than IR (Multi-invoice)
+INSERT INTO stg.excluded_cases
+SELECT DISTINCT
+_case_concept_name_,
+'Incomplete case (GR < IR and Multi-Invoice)'
+FROM #sum_values
+WHERE Sum_GR < Sum_IR
+AND Sum_GR > 1
+AND _case_item_category_ <> 'Consignment'
 Go
