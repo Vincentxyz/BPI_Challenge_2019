@@ -5,7 +5,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [DIM].[HANDOVER_OF_WORK](
+CREATE TABLE [DIM].[case_handover_of_work](
 
 	[_case_concept_name_] [nvarchar](100) NULL,
 	[number_of_handovers] [bigint] NOT NULL,
