@@ -5,7 +5,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [DIM].[MISSING_MATERIAL_INFO] (
+CREATE TABLE [DIM].[event_missing_material_info] (
 	[_eventID__] [bigint] NOT NULL,
 	[_case_concept_name_] [nvarchar](100) NULL,
 	[_event_concept_name_] [nvarchar](100) NULL,
