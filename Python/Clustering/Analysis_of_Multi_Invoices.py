@@ -2,6 +2,7 @@
 import numpy as np
 import sqlalchemy as db
 import pandas as pd
+from collections import defaultdict
 
 
 # Build database connection
@@ -12,39 +13,40 @@ metadata = db.MetaData(schema = 'PROM')
 
 # Get Clusters table from database
 
-clusters = db.Table('Clusters_04_Consignment',metadata,autoload = True, autoload_with=engine)
-ResultProxy= con.execute(db.select([clusters]))
+multi_invoice = db.Table('Multi_Invoice_Analysis',metadata,autoload = True, autoload_with=engine)
+ResultProxy= con.execute(db.select([multi_invoice]))
 ResultSet = ResultProxy.fetchall()
-df_clusters = pd.DataFrame(ResultSet)
-df_clusters.columns = ResultSet[0].keys()
-
+df_multi_invoice = pd.DataFrame(ResultSet)
+df_multi_invoice.columns = ResultSet[0].keys()
 # Decision Tree
 
 # Cutting irrelevant columns
+df_multi_invoice = df_multi_invoice.dropna() 
+df = df_multi_invoice.iloc[:, [1,2,3,4,6,8,9,10,11,12,13,16]]
 
-df_clusters = df_clusters.iloc[:, [1,2,3,4,6,10,11,12,13,16]]
 
 
 # Encoding categorical data
 # Encoding the Independent Variable
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from collections import defaultdict
- 
-d = defaultdict(LabelEncoder)
-# Encoding the variable
-df_clusters_encoded = df_clusters.apply(lambda x: d[x.name].fit_transform(x))
- 
 
 
- 
+
 
 # Creating Train and Test Set
-X = df_clusters_encoded.iloc[:, 0:9].values
-y = df_clusters_encoded.iloc[:, 9].values
+X = df.iloc[:, 0:11]
+y = df.iloc[:, 11].values
+
+d = defaultdict(LabelEncoder)
+# Encoding the variable
+X = X.apply(lambda x: d[x.name].fit_transform(x))
+
 
 #One-hot encoding
 onehotencoder = OneHotEncoder(categorical_features = "all")
 X = onehotencoder.fit_transform(X).toarray()
+
 
 
 # Splitting the dataset into the Training set and Test set

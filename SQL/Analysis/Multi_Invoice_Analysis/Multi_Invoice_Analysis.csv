@@ -1,0 +1,12 @@
+﻿_case_Item_Category_,Invoice_Quantity,(No column name)
+2-way match,No_Invoice,2
+2-way match,One_Invoice,301
+"3-way match, invoice after GR",NULL,2
+"3-way match, invoice after GR",Multiple_Invoices,661
+"3-way match, invoice after GR",No_Invoice,31
+"3-way match, invoice after GR",One_Invoice,7533
+"3-way match, invoice before GR",NULL,389
+"3-way match, invoice before GR",Multiple_Invoices,3986
+"3-way match, invoice before GR",No_Invoice,1067
+"3-way match, invoice before GR",One_Invoice,165378
+Consignment,No_Invoice,1100
