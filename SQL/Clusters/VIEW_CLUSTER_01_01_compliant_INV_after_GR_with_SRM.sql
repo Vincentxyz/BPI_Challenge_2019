@@ -1,5 +1,5 @@
 
--- View creation PROM.CLUSTER_01_02_compliant_INV_after_GR_with_SRM
+-- View creation PROM.CLUSTER_01_01_compliant_INV_after_GR_with_SRM
 
 CREATE VIEW PROM.CLUSTER_01_02_compliant_INV_after_GR_with_SRM
 AS SELECT  Event_Log_All.*,case_clustering.level_2_cluster_id
