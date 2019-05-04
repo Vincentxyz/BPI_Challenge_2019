@@ -17,13 +17,17 @@ SELECT
 	  from PROM.Event_Log_All
 	  group by _case_concept_name_,_case_item_category_
 
+
+DELETE FROM stg.excluded_cases
+WHERE exclusion_reason = 'Incomplete case (GR < IR and Consignment)'
+
 -- Add cases with less GR than IR (Consignment)
 INSERT INTO stg.excluded_cases
 SELECT DISTINCT
 _case_concept_name_,
-'Incomplete case (GR < IR and Consignment)'
+'Incomplete case (No GR and Consignment)'
 FROM #sum_values
-WHERE Sum_GR < Sum_IR
+WHERE Sum_GR = 0
 AND _case_item_category_ = 'Consignment'
 Go
 
