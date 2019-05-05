@@ -1,6 +1,3 @@
-DELETE FROM stg.excluded_cases WHERE exclusion_reason <> 'Incomplete case (GR < IR and Consignment)';
-Go
-
 SELECT  
       [_case_concept_name_],
 	  _case_item_category_,

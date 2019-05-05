@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS PROM.Event_log_All;
+Go
+
 CREATE TABLE PROM.Event_log_All (
 	"_case_concept_name_" NVARCHAR(100)
 	,	"_case_Spend_area_text_" NVARCHAR(100)
@@ -55,15 +58,19 @@ case_table.[_case_concept_name_]
       ,[_case_GR_Based_Inv__Verif__]
       ,[_case_Item_]
       ,[_case_Goods_Receipt_]
-	  ,[_event_concept_name_]
+	  ,event_table.[_event_concept_name_]
       ,[_event_User_]
       ,[_event_org_resource_]
       ,[_event_Cumulative_net_worth__EUR__]
       ,[_event_time_timestamp_]
-      ,[_event_ID__]
-	  ,CONVERT(INT,[Sorting]) AS sorting
+      ,[_eventID__]
+	  ,CONVERT(INT,[sorting]) AS sorting
 
  FROM 
-PTP.case_table
-JOIN PTP.event_table
+stg.case_table
+JOIN stg.event_table
 ON case_table._case_concept_name_ = event_table._case_concept_name_
+JOIN stg.Event_Sorting
+ON event_table._event_concept_name_ = Event_Sorting._event_concept_name_
+WHERE case_table._case_concept_name_ NOT IN 
+(SELECT DISTINCT _case_concept_name_ FROM stg.excluded_cases)

@@ -9,7 +9,9 @@ Go
 
 CREATE TABLE stg.case_clustering (
 "_case_concept_name_" NVARCHAR(100) PRIMARY KEY,
-"cluster_id" INT references PTP.cluster_id(cluster_id)
+"level_1_cluster_id",
+"level_2_cluster_id",
+"level_3_cluster_id"
 );
 Go 
 
