@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS stg.case_compliance;
+Go
+
 SELECT  
       [_case_concept_name_],
 	  _case_item_category_,

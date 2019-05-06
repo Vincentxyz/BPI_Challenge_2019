@@ -335,7 +335,7 @@ WHERE event_table_filtered._event_concept_name_  like '%SRM:%')
 AND case_table_filtered._case_item_type_ = 'Standard';
 Go
 
-UPDATE stg.case_clustering SET level_3_cluster_id = '02_02-02'
+UPDATE stg.case_clustering SET level_3_cluster_id = '02_02_02'
 FROM stg.case_clustering 
 JOIN stg.case_table_filtered ON
 case_clustering._case_concept_name_ = case_table_filtered._case_concept_name_
@@ -361,5 +361,11 @@ WHERE event_table_filtered._event_concept_name_  like '%SRM:%')
 AND case_table_filtered._case_item_type_ = 'Third-Party';
 Go
 
+UPDATE stg.case_clustering SET final_cluster =  CASE 
+		WHEN level_3_cluster_id IS NOT NULL THEN level_3_cluster_id
+		WHEN level_2_cluster_id IS NOT NULL THEN level_2_cluster_id
+		WHEN level_1_cluster_id IS NOT NULL THEN level_1_cluster_id
+		ELSE 'NA'
+		END;
+		Go
 
-Go

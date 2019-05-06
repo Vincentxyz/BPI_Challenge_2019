@@ -125,7 +125,7 @@ metadata = db.MetaData(schema = 'PROM')
 
 # Get event log from database
 
-table = db.Table('Event_Log_All',metadata,autoload = True, autoload_with=engine)
+table = db.Table('Event_Log_Compliant',metadata,autoload = True, autoload_with=engine)
 ResultProxy= con.execute(db.select([table]))
 ResultSet = ResultProxy.fetchall()
 df_export = pd.DataFrame(ResultSet)
@@ -203,7 +203,7 @@ wss_item_type +=  calculate_wss_item_type(two_way_match_small, two_way_match_big
 
 print('Total WSS: \t\t\t\t' + str(wss_total))
 print('Company WSS: \t\t\t\t' + str(wss_company))
-#print('Document Type WSS: \t\t\t' + str(wss_document_type))
+print('Document Type WSS: \t\t\t' + str(wss_document_type))
 print('Spend_classification split WSS: \t' + str(wss_spend_classification))
 print('Item Type WSS: \t\t\t\t' + str(wss_item_type))
 
