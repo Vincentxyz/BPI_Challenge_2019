@@ -9,9 +9,10 @@ Go
 
 CREATE TABLE stg.case_clustering (
 "_case_concept_name_" NVARCHAR(100) PRIMARY KEY,
-"level_1_cluster_id",
-"level_2_cluster_id",
-"level_3_cluster_id"
+"level_1_cluster_id" NVARCHAR(100),
+"level_2_cluster_id" NVARCHAR(100),
+"level_3_cluster_id" NVARCHAR(100),
+"final_cluster" NVARCHAR(100)
 );
 Go 
 
@@ -19,7 +20,7 @@ INSERT INTO stg.case_clustering (
 _case_concept_name_
 ) SELECT
 _case_concept_name_
-FROM PTP.case_table;
+FROM stg.case_table_filtered;
 Go
 
 CREATE INDEX ix_case_clustering
