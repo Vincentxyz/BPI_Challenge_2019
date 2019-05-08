@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS #case_event_count;
 Go
 
-DROP TABLE IF EXISTS stg.count_cases_per_event;
+DROP TABLE IF EXISTS stg.count_compliant_cases_per_event;
 Go
 
 SELECT _case_concept_name_, _event_concept_name_, COUNT(*) AS count_case_event

@@ -17,7 +17,8 @@ CREATE TABLE stg.case_clustering (
 "_case_concept_name_" NVARCHAR(100) PRIMARY KEY,
 "level_1_cluster_id" NVARCHAR(100),
 "level_2_cluster_id" NVARCHAR(100),
-"level_3_cluster_id" NVARCHAR(100)
+"level_3_cluster_id" NVARCHAR(100),
+"final_cluster" NVARCHAR(100)
 );
 Go 
 

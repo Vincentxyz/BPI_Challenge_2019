@@ -207,4 +207,12 @@ print('Document Type WSS: \t\t\t' + str(wss_document_type))
 print('Spend_classification split WSS: \t' + str(wss_spend_classification))
 print('Item Type WSS: \t\t\t\t' + str(wss_item_type))
 
+wss_value = [wss_total, wss_company, wss_document_type, wss_spend_classification, wss_item_type]
+wss_column = ['Entire Event Log', '_case_Company_','_case_Document_Type_', 'case_Spend_classification_text_', '_case_Item_Type_']
+
+wss_summary = pd.DataFrame({'case column': wss_column, 'sum of wss': wss_value})
+
+wss_summary.to_csv('C:/Users/vince_000/Documents/GitHub/BPI_Challenge_2019/Python/Clustering/Dissimilarity/wss_summary.csv', index = False)
+
+
 
