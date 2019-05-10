@@ -1,16 +1,16 @@
 ﻿_event_concept_name_,Sorting
 SRM: Created,100
 SRM: Incomplete,200
-SRM: Change was Transmitted,300
-SRM: Held,400
-SRM: Deleted,500
-SRM: Awaiting Approval,600
-SRM: Document Completed,700
-SRM: In Transfer to Execution Syst.,800
-SRM: Transfer Failed (E.Sys.),900
-SRM: Transaction Completed,1000
-SRM: Ordered,1100
-SRM: Complete,1200
+SRM: Awaiting Approval,300
+SRM: Change was Transmitted,400
+SRM: Complete,500
+SRM: Held,600
+SRM: Deleted,700
+SRM: Document Completed,800
+SRM: In Transfer to Execution Syst.,900
+SRM: Transfer Failed (E.Sys.),1000
+SRM: Transaction Completed,1100
+SRM: Ordered,1200
 Create Purchase Requisition Item,1300
 Release Purchase Requisition,1400
 Create Purchase Order Item,1500

@@ -1,0 +1,43 @@
+_event_concept_name_	Sorting
+SRM: Created	100
+SRM: Incomplete	200
+SRM: Awaiting Approval	300
+SRM: Change was Transmitted	400
+SRM: Complete	500
+SRM: Held	600
+SRM: Deleted	700
+SRM: Document Completed	800
+SRM: In Transfer to Execution Syst.	900
+SRM: Transfer Failed (E.Sys.)	1000
+SRM: Transaction Completed	1100
+SRM: Ordered	1200
+Create Purchase Requisition Item	1300
+Release Purchase Requisition	1400
+Create Purchase Order Item	1500
+Change Approval for Purchase Order	1600
+Change Quantity	1700
+Release Purchase Order	1800
+Block Purchase Order Item	1900
+Reactivate Purchase Order Item	2000
+Delete Purchase Order Item	2100
+Change Price	2200
+Receive Order Confirmation	2300
+Update Order Confirmation	2400
+Change Storage Location	2500
+Record Goods Receipt	2600
+Cancel Goods Receipt	2700
+Record Service Entry Sheet	2800
+Change Delivery Indicator	2900
+Change Rejection Indicator	3000
+Vendor creates invoice	3100
+Record Invoice Receipt	3200
+Cancel Invoice Receipt	3300
+Record Subsequent Invoice	3400
+Cancel Subsequent Invoice	3500
+Change Final Invoice Indicator	3600
+Change payment term	3700
+Change Currency	3800
+Set Payment Block	3900
+Remove Payment Block	4000
+Clear Invoice	4100
+Vendor creates debit memo	4200
