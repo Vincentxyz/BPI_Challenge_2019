@@ -1,9 +1,10 @@
-select A._eventID__,A.is_material_missing,
-B._event_User_,B.task_load_past_two_days,B.task_load_past_seven_days,C.resource_count_case
-from DIM.event_missing_material_info A join DIM.event_resource_workload B on A._eventID__ = B._eventID__
-join DIM.event_handover_of_work C on B._eventID__ = C._eventID__
-
--- Material missing
--- Task load of the user in the last two days
--- Task load of the user in the last seven days
--- Resource count of the users involved in that case in that event in time
+select A._eventID__,A._event_concept_name_,A._case_concept_name_,A._event_User_,A.resource_count_case,
+	B._case_Spend_area_text_,B.is_material_missing	,
+	C.event_retrospective_POI,
+	--D.task_load_past_two_days,D.task_load_past_seven_days,
+	E.is_rework
+into DIM.event_consolidated_dimensions
+from DIM.event_handover_of_work A join DIM.event_missing_material_info B on A._eventID__ = B._eventID__
+join DIM.event_retrospective_po_items C on B._eventID__ = C._eventID__
+--join DIM.event_resource_workload D on C._eventID__ = D._eventID__
+join DIM.event_rework E on C._eventID__ = E._eventID__
