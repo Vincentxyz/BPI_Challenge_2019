@@ -21,12 +21,6 @@ metadata = db.MetaData(schema = 'DIM')
 
 # Get the additional dimensions from SQL for event level
 
-#event_handover_of_work = db.Table('event_handover_of_work',metadata,autoload = True, autoload_with=engine)
-#event_retrospective_po_items = db.Table('event_retrospective_po_items',metadata,autoload = True, autoload_with=engine)
-#event_missing_material_info = db.Table('event_missing_material_info',metadata,autoload = True, autoload_with=engine)
-#event_resource_workload = db.Table('event_resource_workload',metadata,autoload = True, autoload_with=engine)
-#event_rework = db.Table('event_rework',metadata,autoload = True, autoload_with=engine)
-
 event_consolidated_dimensions = db.Table('event_consolidated_dimensions',metadata,autoload = True, autoload_with=engine)
 
 def FetchDatabaseTable(con,table_name):
@@ -35,43 +29,70 @@ def FetchDatabaseTable(con,table_name):
     ResultSet = ResultProxy.fetchall()
     return ResultSet;
 
-# Fetch the Handover of work dimension and load into dataframe
-#result_set_handover_of_work = FetchDatabaseTable(con,event_handover_of_work)
-#df_event_handover_of_work = pd.DataFrame(result_set_handover_of_work)
-#df_event_handover_of_work.columns = result_set_handover_of_work[0].keys()
-#print (df_event_handover_of_work)
-#
-## Fetch the Retrospective PO items dimension and load into dataframe
-#result_retrospective_po_items = FetchDatabaseTable(con,event_retrospective_po_items)
-#df_retrospective_po_items = pd.DataFrame(result_retrospective_po_items)
-#df_retrospective_po_items.columns = result_retrospective_po_items[0].keys()
-#print(df_retrospective_po_items)
-#
-## Fetch the missing material info dimension and load into dataframe
-#result_missing_material_info = FetchDatabaseTable(con,event_missing_material_info)
-#df_missing_material_info = pd.DataFrame(result_missing_material_info)
-#df_missing_material_info.columns = result_missing_material_info[0].keys()
-#
-## Fetch the resource workload of each user  and load into dataframe - Query executing
-#result_resource_workload = FetchDatabaseTable(con,event_resource_workload)
-#df_resource_workload = pd.DataFrame(result_resource_workload)
-#df_resource_workload.columns = result_resource_workload[0].keys()
-#
-#
-## Fetch the rework bit of each event  and load into dataframe - Load in python
-#result_rework = FetchDatabaseTable(con,event_rework)
-#df_rework = pd.DataFrame(result_rework)
-#df_rework.columns = result_rework[0].keys()
-
-
-#Merge the dataframes into one dataframe 
-#pd.merge(df_event_handover_of_work,df_rework,on='_eventID__')
-#print(df_event_handover_of_work.columns)
-#.merge(df_missing_material_info,on='_eventID__').merge(df_resource_workload,on='_eventID__')
-
 #Fetch the consolidated dimensions table
 result = FetchDatabaseTable(con,event_consolidated_dimensions)
 df_result = pd.DataFrame(result)
 df_result.columns = result[0].keys()
+
+# Drop the eventID and case_concept_name columns
+df_result = df_result.drop(['_eventID__','_case_concept_name_'],axis = 1)
+
+# Set the X and Y parameters for predictor and response variables
+X = df_result.drop(['is_compliant'],axis = 1).values
+y = df_result.filter(['is_complaint']).values
+
+# Encoding categorical data
+# Encoding the Independent Variable
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
+labelencoder_event_concept_name = LabelEncoder()
+X['_event_concept_name_'] = labelencoder_event_concept_name.fit_transform(X['_event_concept_name_'])
+
+labelencoder_event_User = LabelEncoder()
+X['_event_User_'] = labelencoder_event_User.fit_transform(X['_event_User_'])
+
+labelencoder_event_spend_text = LabelEncoder()
+X['_case_Spend_classification_text_'] = labelencoder_event_spend_text.fit_transform(X['_case_Spend_classification_text_'])
+
+labelencoder_item_type = LabelEncoder()
+X['_case_Item_Type_'] = labelencoder_item_type.fit_transform(X['_case_Item_Type_'])
+
+labelencoder_Sub_spend_area_text = LabelEncoder()
+X['_case_Sub_spend_area_text_'] = labelencoder_Sub_spend_area_text.fit_transform(X['_case_Sub_spend_area_text_'])
+
+labelencoder_case_Name = LabelEncoder()
+X['_case_Name_'] = labelencoder_case_Name.fit_transform(X['_case_Name_'])
+
+labelencoder_case_Vendor_ = LabelEncoder()
+X['_case_Vendor_'] = labelencoder_case_Vendor_.fit_transform(X['_case_Vendor_'])
+
+labelencoder_case_Document_Type = LabelEncoder()
+X['_case_Document_Type_'] = labelencoder_case_Document_Type.fit_transform(X['_case_Document_Type_'])
+
+labelencoder_case_Item_Category = LabelEncoder()
+X['_case_Item_Category_'] = labelencoder_case_Item_Category.fit_transform(X['_case_Item_Category_'])
+
+
+
+onehotencoder = OneHotEncoder(categorical_features = [0])
+X = onehotencoder.fit_transform(X).toarray()
+
+
+# Encoding the Dependent Variable
+labelencoder_y = LabelEncoder()
+y = labelencoder_y.fit_transform(y)
+
+
+# Encoding categorical data
+# Encoding the Independent Variable
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+labelencoder_X = LabelEncoder()
+
+X[:, 0] = labelencoder_X.fit_transform(X[:, 0])
+onehotencoder = OneHotEncoder(categorical_features = [0])
+X = onehotencoder.fit_transform(X).toarray()
+# Encoding the Dependent Variable
+labelencoder_y = LabelEncoder()
+y = labelencoder_y.fit_transform(y)
 
 
