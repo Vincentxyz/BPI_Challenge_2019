@@ -67,8 +67,7 @@ df_mergedSet = pd.merge(df_result,df_case_activity_count,on='_case_concept_name_
 X = df_mergedSet.drop(['is_compliant'],axis = 1)
 x_categorical_columns = ['_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_']
 X_Categorical = X.filter(x_categorical_columns)
-
-x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','SUM_IR','SUM_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelGR_NetVal']
+x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','Sum_IR','Sum_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetValue','CancelIR_NetValue']
 X_Numerical = X.filter(x_numerical_columns)
 
 numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_']
@@ -115,36 +114,29 @@ new_list_features = [re.sub("[:\-() ]&","_",x) for x in feature_names]
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.40)
+X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20)
 
-## Feature Scaling - Standardization of thr training and test data
-#from sklearn.preprocessing import StandardScaler
-#sc = StandardScaler()
-#X_train = sc.fit_transform(X_train)
-#X_test = sc.transform(X_test)
+# Feature Scaling - Standardization of thr training and test data
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
 
 # Fitting classifier to the Training set with balanced weight
 from sklearn.tree import DecisionTreeClassifier
 classifier = DecisionTreeClassifier(criterion = 'entropy',
+                                    random_state = 0,
                                     class_weight='balanced')
 classifier.fit(X_train, y_train)
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
-y_pred_train = classifier.predict(X_train)
-
 
 # Making the Confusion Matrix
-from sklearn.metrics import confusion_matrix,accuracy_score, balanced_accuracy_score
+from sklearn.metrics import confusion_matrix,accuracy_score
 cm = confusion_matrix(y_test, y_pred)
-acc_test = balanced_accuracy_score(y_test,y_pred)
-acc_train  = balanced_accuracy_score(y_train,y_pred_train)
+acc = accuracy_score(y_test,y_pred)
 
-#Precision score
-from sklearn.metrics import precision_score,recall_score,f1_score
-precisionScore = precision_score(y_test, y_pred)
-recallScore = recall_score(y_test, y_pred)
-f1Score = f1_score(y_test, y_pred)
 #Grpahviz visulaisation
 from graphviz import Source, render
 
@@ -191,6 +183,7 @@ grid_search = GridSearchCV(estimator = classifier,
 grid_search = grid_search.fit(X_train, y_train)
 best_accuracy = grid_search.best_score_
 best_parameters = grid_search.best_params_
+
 
 
 
