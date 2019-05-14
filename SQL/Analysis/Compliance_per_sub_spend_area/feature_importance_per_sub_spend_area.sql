@@ -1,0 +1,5 @@
+SELECT _case_Sub_spend_area_text_,is_compliant, case_table_filtered._case_concept_name_
+FROM stg.case_compliance
+JOIN stg.case_table_filtered
+ON case_table_filtered._case_concept_name_ = case_compliance._case_concept_name_
+WHERE is_complete = 1

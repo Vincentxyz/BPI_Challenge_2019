@@ -12,3 +12,17 @@ ON stg.event_table_filtered (_case_concept_name_, _event_concept_name_, _event_t
 
 CREATE INDEX ix_event_table_filtered_event_id
 ON stg.event_table_filtered (_eventID__)
+
+CREATE INDEX ix_event_table_filtered_timestamp
+ON stg.event_table_filtered 
+(
+	_event_time_timestamp_
+)
+GO
+
+CREATE INDEX ix_event_table_filtered_user
+ON stg.event_table_filtered 
+(
+	_event_User_
+)
+GO
