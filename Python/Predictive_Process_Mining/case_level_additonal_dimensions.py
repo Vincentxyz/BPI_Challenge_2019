@@ -83,27 +83,11 @@ X_Numerical = pd.concat([X_Numerical,X_Activity],axis = 1).values
 y = df_result.filter(['is_compliant'])
 
 
-# Encoding categorical data using Label Encoder and OneHotEncoder
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-#
-#labelencoder_event_spend_text = LabelEncoder()
-#X_Categorical['_case_Spend_classification_text_'] = labelencoder_event_spend_text.fit_transform(X_Categorical['_case_Spend_classification_text_'])
-#
-#labelencoder_item_type = LabelEncoder()
-#X_Categorical['_case_Item_Type_'] = labelencoder_item_type.fit_transform(X_Categorical['_case_Item_Type_'])
-#
-#labelencoder_Sub_spend_area_text = LabelEncoder()
-#X_Categorical['_case_Sub_spend_area_text_'] = labelencoder_Sub_spend_area_text.fit_transform(X_Categorical['_case_Sub_spend_area_text_'])
-#
-#
-#labelencoder_case_Document_Type = LabelEncoder()
-#X_Categorical['_case_Document_Type_'] = labelencoder_case_Document_Type.fit_transform(X_Categorical['_case_Document_Type_'])
-#
-#labelencoder_case_Item_Category = LabelEncoder()
-#X_Categorical['_case_Item_Category_'] = labelencoder_case_Item_Category.fit_transform(X_Categorical['_case_Item_Category_'])
-
+# Encoding categorical data using OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
 
 onehotencoder = OneHotEncoder()
+
 #Onehotencoding for categorical parameters
 X_CategoricalEncoded = onehotencoder.fit_transform(X_Categorical).toarray()
 
