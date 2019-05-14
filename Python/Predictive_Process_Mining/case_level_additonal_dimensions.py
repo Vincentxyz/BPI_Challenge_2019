@@ -68,10 +68,13 @@ X = df_mergedSet.drop(['is_compliant'],axis = 1)
 x_categorical_columns = ['_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_']
 X_Categorical = X.filter(x_categorical_columns)
 
-x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','SUM_IR','SUM_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelGR_NetVal']
+# Switch the commenting in the next to lines to include additional compliance values or not
+#x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','SUM_IR','SUM_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
+x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal']
 X_Numerical = X.filter(x_numerical_columns)
 
-numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_']
+numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'] + ['SUM_IR','SUM_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
+#numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_']
 X_Activity = X.drop(numerical_categorical,axis = 1) 
 activity_names = X_Activity.columns.values
 X_Numerical = pd.concat([X_Numerical,X_Activity],axis = 1).values
@@ -82,22 +85,22 @@ y = df_result.filter(['is_compliant'])
 
 # Encoding categorical data using Label Encoder and OneHotEncoder
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-
-labelencoder_event_spend_text = LabelEncoder()
-X['_case_Spend_classification_text_'] = labelencoder_event_spend_text.fit_transform(X['_case_Spend_classification_text_'])
-
-labelencoder_item_type = LabelEncoder()
-X['_case_Item_Type_'] = labelencoder_item_type.fit_transform(X['_case_Item_Type_'])
-
-labelencoder_Sub_spend_area_text = LabelEncoder()
-X['_case_Sub_spend_area_text_'] = labelencoder_Sub_spend_area_text.fit_transform(X['_case_Sub_spend_area_text_'])
-
-
-labelencoder_case_Document_Type = LabelEncoder()
-X['_case_Document_Type_'] = labelencoder_case_Document_Type.fit_transform(X['_case_Document_Type_'])
-
-labelencoder_case_Item_Category = LabelEncoder()
-X['_case_Item_Category_'] = labelencoder_case_Item_Category.fit_transform(X['_case_Item_Category_'])
+#
+#labelencoder_event_spend_text = LabelEncoder()
+#X_Categorical['_case_Spend_classification_text_'] = labelencoder_event_spend_text.fit_transform(X_Categorical['_case_Spend_classification_text_'])
+#
+#labelencoder_item_type = LabelEncoder()
+#X_Categorical['_case_Item_Type_'] = labelencoder_item_type.fit_transform(X_Categorical['_case_Item_Type_'])
+#
+#labelencoder_Sub_spend_area_text = LabelEncoder()
+#X_Categorical['_case_Sub_spend_area_text_'] = labelencoder_Sub_spend_area_text.fit_transform(X_Categorical['_case_Sub_spend_area_text_'])
+#
+#
+#labelencoder_case_Document_Type = LabelEncoder()
+#X_Categorical['_case_Document_Type_'] = labelencoder_case_Document_Type.fit_transform(X_Categorical['_case_Document_Type_'])
+#
+#labelencoder_case_Item_Category = LabelEncoder()
+#X_Categorical['_case_Item_Category_'] = labelencoder_case_Item_Category.fit_transform(X_Categorical['_case_Item_Category_'])
 
 
 onehotencoder = OneHotEncoder()
@@ -108,14 +111,14 @@ X_CategoricalEncoded = onehotencoder.fit_transform(X_Categorical).toarray()
 X_total = np.concatenate((X_CategoricalEncoded,X_Numerical),axis=1)
 
 #Feature name of the columns used later for visualisation of decision tree
-categorical_column_names = list(onehotencoder.get_feature_names(X_Categorical.columns.values))
-feature_names = x_numerical_columns + categorical_column_names + list(activity_names)
+categorical_column_names = list(onehotencoder.get_feature_names(X.filter(x_categorical_columns).columns.values))
+feature_names = categorical_column_names + x_numerical_columns + list(activity_names)
 import re
 new_list_features = [re.sub("[:\-() ]&","_",x) for x in feature_names]
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.40)
+X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20)
 
 ## Feature Scaling - Standardization of thr training and test data
 #from sklearn.preprocessing import StandardScaler
@@ -126,7 +129,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.40
 # Fitting classifier to the Training set with balanced weight
 from sklearn.tree import DecisionTreeClassifier
 classifier = DecisionTreeClassifier(criterion = 'entropy',
-                                    class_weight='balanced')
+                                    class_weight='balanced', max_depth = 5)
 classifier.fit(X_train, y_train)
 
 # Predicting the Test set results
@@ -155,9 +158,9 @@ import pydotplus
 
 dot_data = StringIO()
 
-export_graphviz(classifier, out_file='dot_data.dot',  
+export_graphviz(classifier, out_file=dot_data,  
                 filled=True, rounded=True,
-                special_characters=True,feature_names =new_list_features )
+                special_characters=False,feature_names =new_list_features )
 
 graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
 
@@ -167,6 +170,8 @@ Image(graph.create_png())
 #important features
 for name, importance in zip(feature_names, classifier.feature_importances_):
     print(name, importance)
+
+df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
     
 #Applying k-fold cross validation
 from sklearn.model_selection import cross_val_score

@@ -9,9 +9,9 @@ SELECT A._case_concept_name_
 ,A._case_Sub_spend_area_text_,
 		A._case_Vendor_,
 		A._case_Document_Type_,
-	   COUNT(DISTINCT AA._case_concept_name_) AS [FREQ_ORDER]
+	   COUNT(DISTINCT AA._case_concept_name_) AS [frequency_equal_order_less_than_one_month_before]
 
-INTO [DIM].[case_frequency_order_new]
+INTO [DIM].[case_frequency_order]
 
 FROM [PROM].[Event_Log_All] A, [PROM].[Event_Log_All] AA
 		where  A._case_Sub_spend_area_text_=AA._case_Sub_spend_area_text_

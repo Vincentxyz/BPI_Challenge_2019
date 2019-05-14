@@ -49,3 +49,19 @@ AND Event_Log_All._event_time_timestamp_ >= #Invoice_Creation.First_Invoice_Reco
 LEFT JOIN #GR_Creation
 ON Event_Log_All._case_concept_name_ = #GR_Creation._case_concept_name_
 AND Event_Log_All._event_time_timestamp_ >= #GR_Creation.First_GR_Record_Time
+
+
+-- case_retrospective_poi
+
+SELECT _case_concept_name_, MAX(_eventID__) as max_event_id
+INTO #max_event_id_per_case
+FROM DIM.event_retrospective_po_items
+GROUP BY _case_concept_name_;
+Go
+
+SELECT event_retrospective_po_items.[_case_concept_name_]
+      ,event_retrospective_POI AS [retrospective_POI]
+INTO DIM.case_retrospective_po_items
+  FROM [DIM].event_retrospective_po_items
+JOIN #max_event_id_per_case
+ON event_retrospective_po_items._case_concept_name_ = #max_event_id_per_case._case_concept_name_
