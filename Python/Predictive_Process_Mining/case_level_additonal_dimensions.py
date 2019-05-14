@@ -160,6 +160,7 @@ accuracies.mean()
 accuracies.sd()
 
 #Applying Grid search to find best model and best parameters
+#balanced tree
 from sklearn.model_selection import GridSearchCV
 parameters = [{'criterion' : ["gini","entropy"]},
               {'max_features': [3,5,10]},
@@ -175,6 +176,8 @@ grid_search = GridSearchCV(estimator = classifier,
 grid_search = grid_search.fit(X_train, y_train)
 best_accuracy = grid_search.best_score_
 best_parameters = grid_search.best_params_
+
+
 
 
 
