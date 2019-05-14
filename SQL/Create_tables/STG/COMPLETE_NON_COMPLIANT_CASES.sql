@@ -48,3 +48,10 @@ and Sum_IR<Sum_GR
 and _case_concept_name_
 IN (Select  _case_concept_name_ from stg.cases_not_consignment_but_complete)
 GO
+
+UPDATE [stg].[case_compliance] SET is_complete=0
+WHERE _case_item_category_='3-way match, invoice before GR' 
+and Deviation <> 0 
+and _case_concept_name_
+IN (Select  _case_concept_name_ from stg.cases_not_consignment_but_complete)
+GO
