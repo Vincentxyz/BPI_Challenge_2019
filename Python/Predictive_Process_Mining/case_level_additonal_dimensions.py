@@ -1,24 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue May 14 13:22:40 2019
-
-@author: anshu
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Sat May 11 20:37:37 2019
-
-@author: anshu
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May 10 14:23:41 2019
-
-@author: anshu
-"""
-
 # Importing the libraries
 import numpy as np
 import sqlalchemy as db
@@ -36,7 +15,8 @@ metadata = db.MetaData(schema = 'DIM')
 # Get the additional dimensions from SQL for event level
 
 case_consolidated_dimensions = db.Table('case_consolidated_dimensions',metadata,autoload = True, autoload_with=engine)
-event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
+#event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
+case_activity_count = db.Table('case_activity_count',metadata,autoload = True, autoload_with=engine)
 
 def FetchDatabaseTable(con,table_name):
 
@@ -50,14 +30,15 @@ df_result = pd.DataFrame(result)
 df_result.columns = result[0].keys()
 
 #Fetch the activity count table
-result_activity_count = FetchDatabaseTable(con,event_activity_count)
-df_result_activity_count = pd.DataFrame(result_activity_count)
-df_result_activity_count.columns = result_activity_count[0].keys()
+result_activity_count = FetchDatabaseTable(con,case_activity_count)
+df_case_activity_count = pd.DataFrame(result_activity_count)
+df_case_activity_count.columns = result_activity_count[0].keys()
 
 #Filter the activity count on case concept and event concept name 
-df_result_activity_count_filtered = df_result_activity_count.filter(['_case_concept_name_','_event_concept_name_'])
+#df_result_activity_count_filtered = df_result_activity_count.filter(['_case_concept_name_','_event_concept_name_'])
 #Pivot_table to get the case level count from event data
-df_case_activity_count = df_result_activity_count_filtered.pivot_table(index = '_case_concept_name_', columns = '_event_concept_name_', aggfunc = len, fill_value = 0)
+#df_case_activity_count = df_result_activity_count_filtered.pivot_table(index = '_case_concept_name_', columns = '_event_concept_name_', aggfunc = len, fill_value = 0)
+
 
 #Merge the two datasets from database as input for classification
 df_mergedSet = pd.merge(df_result,df_case_activity_count,on='_case_concept_name_')
@@ -65,22 +46,22 @@ df_mergedSet = pd.merge(df_result,df_case_activity_count,on='_case_concept_name_
 # Set the X and Y parameters for predictor and response variables
 #Categorical and numerical features seperation
 X = df_mergedSet.drop(['is_compliant'],axis = 1)
-x_categorical_columns = ['_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_']
+x_categorical_columns = ['_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster']
 X_Categorical = X.filter(x_categorical_columns)
 
 # Switch the commenting in the next to lines to include additional compliance values or not
-#x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','SUM_IR','SUM_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
-x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal']
+#x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','Sum_IR','Sum_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal','retrospective_POI','throughput_time_in_d']
+x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d']
 X_Numerical = X.filter(x_numerical_columns)
 
-numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'] + ['SUM_IR','SUM_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
+numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'] + ['Sum_IR','Sum_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
 #numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_']
 X_Activity = X.drop(numerical_categorical,axis = 1) 
 activity_names = X_Activity.columns.values
 X_Numerical = pd.concat([X_Numerical,X_Activity],axis = 1).values
 
 #Response variable - Y
-y = df_result.filter(['is_compliant'])
+y = 1 - df_result.filter(['is_compliant'])
 
 
 # Encoding categorical data using OneHotEncoder
@@ -102,19 +83,23 @@ new_list_features = [re.sub("[:\-() ]&","_",x) for x in feature_names]
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20)
-
-## Feature Scaling - Standardization of thr training and test data
-#from sklearn.preprocessing import StandardScaler
-#sc = StandardScaler()
-#X_train = sc.fit_transform(X_train)
-#X_test = sc.transform(X_test)
+X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20, random_state = 0)
 
 # Fitting classifier to the Training set with balanced weight
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, 
 classifier = DecisionTreeClassifier(criterion = 'entropy',
-                                    class_weight='balanced', max_depth = 5)
+                                    class_weight='balanced'
+                                     , max_depth = 6
+                                     , random_state = 0)
+
 classifier.fit(X_train, y_train)
+
+# wittgenstein rule set
+import wittgenstein as lw
+ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
+ripper_clf.fit(pd.concat([pd.DataFrame(X_train), y_train],axis=1),class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
+ripper_clf
+
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
@@ -151,15 +136,11 @@ graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
 Image(graph.create_png())
 
 
-#important features
-for name, importance in zip(feature_names, classifier.feature_importances_):
-    print(name, importance)
-
 df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
     
 #Applying k-fold cross validation
 from sklearn.model_selection import cross_val_score
-accuracies = cross_val_score(estimator = classifier,X = X_train,Y=y_train,cv = 10)
+accuracies = cross_val_score(estimator = classifier,X = X_train,y=y_train,cv = 10)
 accuracies.mean()
 accuracies.sd()
 

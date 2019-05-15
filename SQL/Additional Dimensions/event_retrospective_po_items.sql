@@ -53,10 +53,16 @@ AND Event_Log_All._event_time_timestamp_ >= #GR_Creation.First_GR_Record_Time
 
 -- case_retrospective_poi
 
+DROP TABLE IF EXISTS #max_event_id_per_case;
+Go
+
 SELECT _case_concept_name_, MAX(_eventID__) as max_event_id
 INTO #max_event_id_per_case
 FROM DIM.event_retrospective_po_items
 GROUP BY _case_concept_name_;
+Go
+
+DROP TABLE IF EXISTS DIM.case_retrospective_po_items;
 Go
 
 SELECT event_retrospective_po_items.[_case_concept_name_]
@@ -65,3 +71,4 @@ INTO DIM.case_retrospective_po_items
   FROM [DIM].event_retrospective_po_items
 JOIN #max_event_id_per_case
 ON event_retrospective_po_items._case_concept_name_ = #max_event_id_per_case._case_concept_name_
+AND event_retrospective_po_items._eventID__ = #max_event_id_per_case.max_event_id

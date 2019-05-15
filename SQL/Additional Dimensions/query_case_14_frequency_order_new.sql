@@ -2,7 +2,7 @@
 Calculate frequency of oders by the group(_case_Sub_spend_area_text_,_case_Vendor_,case_Document_Type_) within 1 month
 */
 
-DROP TABLE IF EXISTS [DIM].[frequency_order_new];
+DROP TABLE IF EXISTS [DIM].[case_frequency_order];
 Go
 
 SELECT A._case_concept_name_
