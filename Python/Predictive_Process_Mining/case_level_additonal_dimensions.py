@@ -87,7 +87,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20
 
 # Fitting classifier to the Training set with balanced weight
 from sklearn.tree import DecisionTreeClassifier
-classifier = DecisionTreeClassifier(criterion = 'gini'#,
+classifier = DecisionTreeClassifier(criterion = 'gini',
                                     class_weight='balanced'
                                      , max_depth = 6
                                      , random_state = 0)
