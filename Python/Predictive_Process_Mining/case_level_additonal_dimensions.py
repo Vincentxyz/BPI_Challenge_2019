@@ -86,19 +86,19 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20, random_state = 0)
 
 # Fitting classifier to the Training set with balanced weight
-from sklearn.tree import DecisionTreeClassifier, 
-classifier = DecisionTreeClassifier(criterion = 'entropy',
+from sklearn.tree import DecisionTreeClassifier
+classifier = DecisionTreeClassifier(criterion = 'gini'#,
                                     class_weight='balanced'
                                      , max_depth = 6
                                      , random_state = 0)
 
 classifier.fit(X_train, y_train)
 
-# wittgenstein rule set
-import wittgenstein as lw
-ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
-ripper_clf.fit(pd.concat([pd.DataFrame(X_train), y_train],axis=1),class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
-ripper_clf
+## wittgenstein rule set
+#import wittgenstein as lw
+#ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
+#ripper_clf.fit(pd.concat([pd.DataFrame(X_train), y_train],axis=1),class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
+#ripper_clf
 
 
 # Predicting the Test set results
@@ -148,19 +148,25 @@ accuracies.sd()
 #balanced tree
 from sklearn.model_selection import GridSearchCV
 parameters = [{'criterion' : ["gini","entropy"]},
-              {'max_features': [3,5,10]},
+              {'max_features': [3,4,5,6,10,None]},
               {'min_samples_leaf': [1,5,10]},
-              {'max_depth': [2,4,8,16,None]},
-              {'class_weight': "balanced"}]
+              {'max_depth': [2,4,5,6,8,9,10,16,None]}]
 
 grid_search = GridSearchCV(estimator = classifier,
                            param_grid = parameters,
-                           scoring = 'accuracy',
+                           scoring = 'f1_weighted',
                            cv = 10,
                            n_jobs = -1)
 grid_search = grid_search.fit(X_train, y_train)
 best_accuracy = grid_search.best_score_
 best_parameters = grid_search.best_params_
+
+
+#Exploratory Analyses
+
+import matplotlib.pyplot as plt
+
+plt.scatter(X.count_rework, y)
 
 
 
