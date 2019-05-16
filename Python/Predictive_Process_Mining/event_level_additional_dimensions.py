@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May 10 14:23:41 2019
-
-@author: anshu
-"""
-
 # Importing the libraries
 import numpy as np
 import sqlalchemy as db
@@ -21,7 +14,9 @@ metadata = db.MetaData(schema = 'DIM')
 
 # Get the additional dimensions from SQL for event level
 
-event_consolidated_dimensions = db.Table('event_consolidated_dimensions',metadata,autoload = True, autoload_with=engine)
+case_consolidated_dimensions = db.Table('event_consolidated_dimensions',metadata,autoload = True, autoload_with=engine)
+#event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
+case_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
 
 def FetchDatabaseTable(con,table_name):
 
@@ -30,69 +25,138 @@ def FetchDatabaseTable(con,table_name):
     return ResultSet;
 
 #Fetch the consolidated dimensions table
-result = FetchDatabaseTable(con,event_consolidated_dimensions)
+result = FetchDatabaseTable(con,case_consolidated_dimensions)
 df_result = pd.DataFrame(result)
 df_result.columns = result[0].keys()
 
-# Drop the eventID and case_concept_name columns
-df_result = df_result.drop(['_eventID__','_case_concept_name_'],axis = 1)
+#Fetch the activity count table
+result_activity_count = FetchDatabaseTable(con,case_activity_count)
+df_case_activity_count = pd.DataFrame(result_activity_count)
+df_case_activity_count.columns = result_activity_count[0].keys()
+
+#Merge the two datasets from database as input for classification
+df_mergedSet = pd.merge(df_result,df_case_activity_count,on='_eventID__')
 
 # Set the X and Y parameters for predictor and response variables
-X = df_result.drop(['is_compliant'],axis = 1).values
-y = df_result.filter(['is_complaint']).values
+#Categorical and numerical features seperation
+X = df_mergedSet.drop(['is_compliant'],axis = 1)
+x_categorical_columns = ['_event_concept_name_,_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster']
+X_Categorical = X.filter(x_categorical_columns)
 
-# Encoding categorical data
-# Encoding the Independent Variable
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+# Switch the commenting in the next to lines to include additional compliance values or not
+#x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','Sum_IR','Sum_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal','retrospective_POI','throughput_time_in_d']
+x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','is_rework']
+   # values still missing for event level dimensions 'material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d']
+X_Numerical = X.filter(x_numerical_columns)
 
-labelencoder_event_concept_name = LabelEncoder()
-X['_event_concept_name_'] = labelencoder_event_concept_name.fit_transform(X['_event_concept_name_'])
+numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'+ '_eventID__'] + ['Sum_IR','Sum_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
+#numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_' + '_eventID__']
+X_Activity = X.drop(numerical_categorical,axis = 1) 
+activity_names = X_Activity.columns.values
+X_Numerical = pd.concat([X_Numerical,X_Activity],axis = 1).values
 
-labelencoder_event_User = LabelEncoder()
-X['_event_User_'] = labelencoder_event_User.fit_transform(X['_event_User_'])
-
-labelencoder_event_spend_text = LabelEncoder()
-X['_case_Spend_classification_text_'] = labelencoder_event_spend_text.fit_transform(X['_case_Spend_classification_text_'])
-
-labelencoder_item_type = LabelEncoder()
-X['_case_Item_Type_'] = labelencoder_item_type.fit_transform(X['_case_Item_Type_'])
-
-labelencoder_Sub_spend_area_text = LabelEncoder()
-X['_case_Sub_spend_area_text_'] = labelencoder_Sub_spend_area_text.fit_transform(X['_case_Sub_spend_area_text_'])
-
-labelencoder_case_Name = LabelEncoder()
-X['_case_Name_'] = labelencoder_case_Name.fit_transform(X['_case_Name_'])
-
-labelencoder_case_Vendor_ = LabelEncoder()
-X['_case_Vendor_'] = labelencoder_case_Vendor_.fit_transform(X['_case_Vendor_'])
-
-labelencoder_case_Document_Type = LabelEncoder()
-X['_case_Document_Type_'] = labelencoder_case_Document_Type.fit_transform(X['_case_Document_Type_'])
-
-labelencoder_case_Item_Category = LabelEncoder()
-X['_case_Item_Category_'] = labelencoder_case_Item_Category.fit_transform(X['_case_Item_Category_'])
+#Response variable - Y
+y = 1 - df_result.filter(['is_compliant'])
 
 
+# Encoding categorical data using OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
 
-onehotencoder = OneHotEncoder(categorical_features = [0])
-X = onehotencoder.fit_transform(X).toarray()
+onehotencoder = OneHotEncoder()
+
+#Onehotencoding for categorical parameters
+X_CategoricalEncoded = onehotencoder.fit_transform(X_Categorical).toarray()
+
+#Concatenation of the categorical and numerical dimensions
+X_total = np.concatenate((X_CategoricalEncoded,X_Numerical),axis=1)
+
+#Feature name of the columns used later for visualisation of decision tree
+categorical_column_names = list(onehotencoder.get_feature_names(X.filter(x_categorical_columns).columns.values))
+feature_names = categorical_column_names + x_numerical_columns + list(activity_names)
+import re
+new_list_features = [re.sub("[:\-() ]&","_",x) for x in feature_names]
+
+# Splitting the dataset into the Training set and Test set
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20, random_state = 0)
+
+# Fitting classifier to the Training set with balanced weight
+from sklearn.tree import DecisionTreeClassifier, 
+classifier = DecisionTreeClassifier(criterion = 'entropy',
+                                    class_weight='balanced'
+                                     , max_depth = 6
+                                     , random_state = 0)
+
+classifier.fit(X_train, y_train)
+
+# wittgenstein rule set
+import wittgenstein as lw
+ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
+ripper_clf.fit(pd.concat([pd.DataFrame(X_train), y_train],axis=1),class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
+ripper_clf
 
 
-# Encoding the Dependent Variable
-labelencoder_y = LabelEncoder()
-y = labelencoder_y.fit_transform(y)
+# Predicting the Test set results
+y_pred = classifier.predict(X_test)
+y_pred_train = classifier.predict(X_train)
 
 
-# Encoding categorical data
-# Encoding the Independent Variable
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-labelencoder_X = LabelEncoder()
+# Making the Confusion Matrix
+from sklearn.metrics import confusion_matrix,accuracy_score, balanced_accuracy_score
+cm = confusion_matrix(y_test, y_pred)
+acc_test = balanced_accuracy_score(y_test,y_pred)
+acc_train  = balanced_accuracy_score(y_train,y_pred_train)
 
-X[:, 0] = labelencoder_X.fit_transform(X[:, 0])
-onehotencoder = OneHotEncoder(categorical_features = [0])
-X = onehotencoder.fit_transform(X).toarray()
-# Encoding the Dependent Variable
-labelencoder_y = LabelEncoder()
-y = labelencoder_y.fit_transform(y)
+#Precision score
+from sklearn.metrics import precision_score,recall_score,f1_score
+precisionScore = precision_score(y_test, y_pred)
+recallScore = recall_score(y_test, y_pred)
+f1Score = f1_score(y_test, y_pred)
+#Grpahviz visulaisation
+from graphviz import Source, render
+
+from sklearn.externals.six import StringIO  
+from IPython.display import Image  
+from sklearn.tree import export_graphviz
+import pydotplus
+
+dot_data = StringIO()
+
+export_graphviz(classifier, out_file=dot_data,  
+                filled=True, rounded=True,
+                special_characters=False,feature_names =new_list_features )
+
+graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
+
+Image(graph.create_png())
+
+
+df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
+    
+#Applying k-fold cross validation
+from sklearn.model_selection import cross_val_score
+accuracies = cross_val_score(estimator = classifier,X = X_train,y=y_train,cv = 10)
+accuracies.mean()
+accuracies.sd()
+
+#Applying Grid search to find best model and best parameters
+#balanced tree
+from sklearn.model_selection import GridSearchCV
+parameters = [{'criterion' : ["gini","entropy"]},
+              {'max_features': [3,5,10]},
+              {'min_samples_leaf': [1,5,10]},
+              {'max_depth': [2,4,8,16,None]},
+              {'class_weight': "balanced"}]
+
+grid_search = GridSearchCV(estimator = classifier,
+                           param_grid = parameters,
+                           scoring = 'accuracy',
+                           cv = 10,
+                           n_jobs = -1)
+grid_search = grid_search.fit(X_train, y_train)
+best_accuracy = grid_search.best_score_
+best_parameters = grid_search.best_params_
+
+
 
 
