@@ -139,23 +139,39 @@ Image(graph.create_png())
 df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
     
 #Applying k-fold cross validation
+
 from sklearn.model_selection import cross_val_score
-accuracies = cross_val_score(estimator = classifier,X = X_train,y=y_train,cv = 10)
-accuracies.mean()
-accuracies.sd()
+
+#---------------Cross Validation Recall -----------------
+
+recall = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'recall')
+recall.mean()
+recall.std()
+
+#---------------Cross Validation Precision -----------------
+
+precision = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'precision')
+precision.mean()
+precision.std()
+
+#---------------Cross Validation F1-Score -----------------
+
+f1_score = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'f1_weighted')
+f1_score.mean()
+f1_score.std()
+
 
 #Applying Grid search to find best model and best parameters
 #balanced tree
 from sklearn.model_selection import GridSearchCV
-parameters = [{'criterion' : ["gini","entropy"]},
-              {'max_features': [3,4,5,6,10,None]},
-              {'min_samples_leaf': [1,5,10]},
-              {'max_depth': [2,4,5,6,8,9,10,16,None]}]
+parameters = [{'criterion' : ["gini"]},
+              {'max_features': [None]},
+              {'max_depth': [1,2,4,5,6,8,9,10,11,12,13,14,15,16,None]}]
 
 grid_search = GridSearchCV(estimator = classifier,
                            param_grid = parameters,
-                           scoring = 'f1_weighted',
-                           cv = 10,
+                           scoring = 'recall',
+                           cv = 5,
                            n_jobs = -1)
 grid_search = grid_search.fit(X_train, y_train)
 best_accuracy = grid_search.best_score_

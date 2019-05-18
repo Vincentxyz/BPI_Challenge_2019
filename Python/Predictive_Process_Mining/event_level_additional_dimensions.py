@@ -14,9 +14,9 @@ metadata = db.MetaData(schema = 'DIM')
 
 # Get the additional dimensions from SQL for event level
 
-case_consolidated_dimensions = db.Table('event_consolidated_dimensions',metadata,autoload = True, autoload_with=engine)
+event_consolidated_dimensions = db.Table('event_consolidated_dimensions',metadata,autoload = True, autoload_with=engine)
 #event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
-case_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
+event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
 
 def FetchDatabaseTable(con,table_name):
 
@@ -25,27 +25,31 @@ def FetchDatabaseTable(con,table_name):
     return ResultSet;
 
 #Fetch the consolidated dimensions table
-result = FetchDatabaseTable(con,case_consolidated_dimensions)
+result = FetchDatabaseTable(con,event_consolidated_dimensions)
 df_result = pd.DataFrame(result)
 df_result.columns = result[0].keys()
 
 #Fetch the activity count table
-result_activity_count = FetchDatabaseTable(con,case_activity_count)
-df_case_activity_count = pd.DataFrame(result_activity_count)
-df_case_activity_count.columns = result_activity_count[0].keys()
+result_activity_count = FetchDatabaseTable(con,event_activity_count)
+df_event_activity_count = pd.DataFrame(result_activity_count)
+df_event_activity_count.columns = result_activity_count[0].keys()
 
 #Merge the two datasets from database as input for classification
-df_mergedSet = pd.merge(df_result,df_case_activity_count,on='_eventID__')
+df_mergedSet = pd.concat(df_result,df_event_activity_count,on='_eventID__', axis = 1)
+
+df_result.dtypes
+df_event_activity_count.dtypes
 
 # Set the X and Y parameters for predictor and response variables
 #Categorical and numerical features seperation
 X = df_mergedSet.drop(['is_compliant'],axis = 1)
-x_categorical_columns = ['_event_concept_name_,_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster']
+x_categorical_columns = ['_event_concept_name_,_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster','sod_create_poi_and_gr''sod_create_poi_and_ir']
 X_Categorical = X.filter(x_categorical_columns)
 
 # Switch the commenting in the next to lines to include additional compliance values or not
-#x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','Sum_IR','Sum_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal','retrospective_POI','throughput_time_in_d']
-x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','is_rework']
+#x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','rework_count',,'CreateOrder_NetVal']
+#x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','rework_count',,'CreateOrder_NetVal']
+
    # values still missing for event level dimensions 'material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d']
 X_Numerical = X.filter(x_numerical_columns)
 
@@ -80,20 +84,16 @@ new_list_features = [re.sub("[:\-() ]&","_",x) for x in feature_names]
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20, random_state = 0)
 
+
+
 # Fitting classifier to the Training set with balanced weight
 from sklearn.tree import DecisionTreeClassifier, 
-classifier = DecisionTreeClassifier(criterion = 'entropy',
+classifier = DecisionTreeClassifier(criterion = 'gini',
                                     class_weight='balanced'
                                      , max_depth = 6
                                      , random_state = 0)
 
 classifier.fit(X_train, y_train)
-
-# wittgenstein rule set
-import wittgenstein as lw
-ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
-ripper_clf.fit(pd.concat([pd.DataFrame(X_train), y_train],axis=1),class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
-ripper_clf
 
 
 # Predicting the Test set results
@@ -133,30 +133,30 @@ Image(graph.create_png())
 
 df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
     
-#Applying k-fold cross validation
-from sklearn.model_selection import cross_val_score
-accuracies = cross_val_score(estimator = classifier,X = X_train,y=y_train,cv = 10)
-accuracies.mean()
-accuracies.sd()
 
-#Applying Grid search to find best model and best parameters
-#balanced tree
-from sklearn.model_selection import GridSearchCV
-parameters = [{'criterion' : ["gini","entropy"]},
-              {'max_features': [3,5,10]},
-              {'min_samples_leaf': [1,5,10]},
-              {'max_depth': [2,4,8,16,None]},
-              {'class_weight': "balanced"}]
-
-grid_search = GridSearchCV(estimator = classifier,
-                           param_grid = parameters,
-                           scoring = 'accuracy',
-                           cv = 10,
-                           n_jobs = -1)
-grid_search = grid_search.fit(X_train, y_train)
-best_accuracy = grid_search.best_score_
-best_parameters = grid_search.best_params_
-
+##Applying k-fold cross validation
+#from sklearn.model_selection import cross_val_score
+#accuracies = cross_val_score(estimator = classifier,X = X_train,y=y_train,cv = 10)
+#accuracies.mean()
+#accuracies.sd()
+#
+##Applying Grid search to find best model and best parameters
+##balanced tree
+#from sklearn.model_selection import GridSearchCV
+#parameters = [{'criterion' : ["gini","entropy"]},
+#              {'max_features': [3,5,10]},
+#              {'min_samples_leaf': [1,5,10]},
+#              {'max_depth': [2,4,8,16,None]},
+#              {'class_weight': "balanced"}]
+#
+#grid_search = GridSearchCV(estimator = classifier,
+#                           param_grid = parameters,
+#                           scoring = 'accuracy',
+#                           cv = 10,
+#                           n_jobs = -1)
+#grid_search = grid_search.fit(X_train, y_train)
+#best_accuracy = grid_search.best_score_
+#best_parameters = grid_search.best_params_
 
 
 
