@@ -7,7 +7,6 @@ Go
 SELECT YEAR(_event_time_timestamp_) AS creation_year,
 MONTH(_event_time_timestamp_) AS creation_month,
 DAY(_event_time_timestamp_)  AS creation_day,
-_event_time_timestamp_,
 _case_Vendor_,
 COUNT(_case_Purchasing_Document_) AS number_of_orders
 INTO #no_orders_per_day
@@ -16,7 +15,6 @@ WHERE _event_concept_name_ = 'Create Purchase Order Item'
 GROUP BY YEAR(_event_time_timestamp_),
 MONTH(_event_time_timestamp_),
 DAY(_event_time_timestamp_),
-_event_time_timestamp_,
 _case_Vendor_
 
 SELECT _case_concept_name_, 

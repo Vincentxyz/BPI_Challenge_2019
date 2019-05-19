@@ -66,11 +66,11 @@ def numeric_to_categorical(dataframe, column_name, numerical_range, category_nam
 
 # %%
 new_df = df_mergedSet.copy(deep=True)  # type: pandas.Dataframe
-numeric_to_categorical(new_df, 'count_rework', [0, 1.5, 2.5, np.inf], ['<=1.5', '<=2.5', '>2.5'])
+numeric_to_categorical(new_df, 'count_rework', [0, 1.5, 2.5, np.inf], ['<=1.5', '>1.5; <=2.5', '>2.5'])
 numeric_to_categorical(new_df, 'CreateOrder_NetVal', [0, 623.5, 2331.5, 6094.5, 30622.5, np.inf], \
-                       ['<=623.5', '<=2331.5', '<=6094.5', '<=30622.5', '>30622.5'])
+                       ['<=623.5', '>623.5;<=2331.5', '>2331.5;<=6094.5', '>6094.5;<=30622.5', '>30622.5'])
 numeric_to_categorical(new_df, 'throughput_time_in_d', [0, 121.021, 190.354, 232.75, np.inf], \
-                       ['<=121.021', '<=190.354', '<=232.75', '>232.75'])
+                       ['<=121.021', '>121.021;<=190.354', '<=232.75', '>232.75'])
 numeric_to_categorical(new_df, 'number_of_handovers', [0, 3.5, np.inf], ['<=3.5', '>3.5'])
 numeric_to_categorical(new_df, 'number_of_orders_created_same_day_and_vendor', [0, 2.5, 4.5, 5.5, 19.5, 54, 85, np.inf], \
                        ['<=2.5', '<=4.5', '<=5.5', '<=19.5', '<=54', '<=85', '>8.5'])
