@@ -30,30 +30,32 @@ df_result = pd.DataFrame(result)
 df_result.columns = result[0].keys()
 
 #Fetch the activity count table
-result_activity_count = FetchDatabaseTable(con,event_activity_count)
-df_event_activity_count = pd.DataFrame(result_activity_count)
-df_event_activity_count.columns = result_activity_count[0].keys()
+#result_activity_count = FetchDatabaseTable(con,event_activity_count)
+#df_event_activity_count = pd.DataFrame(result_activity_count)
+#df_event_activity_count.columns = result_activity_count[0].keys()
+df_event_activity_count = pd.read_csv('input_for_decision_tree.csv')
+
 
 #Merge the two datasets from database as input for classification
-df_mergedSet = pd.concat(df_result,df_event_activity_count,on='_eventID__', axis = 1)
+df_mergedSet = df_result.merge(df_event_activity_count,on='_eventID__')
 
-df_result.dtypes
+df_result.columns
 df_event_activity_count.dtypes
 
 # Set the X and Y parameters for predictor and response variables
 #Categorical and numerical features seperation
 X = df_mergedSet.drop(['is_compliant'],axis = 1)
-x_categorical_columns = ['_event_concept_name_,_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster','sod_create_poi_and_gr''sod_create_poi_and_ir']
+x_categorical_columns = ['_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster']
 X_Categorical = X.filter(x_categorical_columns)
 
 # Switch the commenting in the next to lines to include additional compliance values or not
 #x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','rework_count',,'CreateOrder_NetVal']
-#x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','rework_count',,'CreateOrder_NetVal']
+x_numerical_columns = ['is_material_missing','event_retrospective_POI','rework_count','CreateOrder_NetVal','user_count','sod_create_poi_and_gr','sod_create_poi_and_ir', 'throughput']
 
    # values still missing for event level dimensions 'material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d']
 X_Numerical = X.filter(x_numerical_columns)
 
-numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'+ '_eventID__'] + ['Sum_IR','Sum_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
+numerical_categorical = x_categorical_columns + x_numerical_columns + ['_event_concept_name_','_case_concept_name__x', '_eventID__', 'sequence_number_x','_case_concept_name__y','_event_time_timestamp_', 'sequence_number_y']
 #numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_' + '_eventID__']
 X_Activity = X.drop(numerical_categorical,axis = 1) 
 activity_names = X_Activity.columns.values
@@ -87,7 +89,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20
 
 
 # Fitting classifier to the Training set with balanced weight
-from sklearn.tree import DecisionTreeClassifier, 
+from sklearn.tree import DecisionTreeClassifier
 classifier = DecisionTreeClassifier(criterion = 'gini',
                                     class_weight='balanced'
                                      , max_depth = 6
@@ -134,29 +136,44 @@ Image(graph.create_png())
 df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
     
 
-##Applying k-fold cross validation
-#from sklearn.model_selection import cross_val_score
-#accuracies = cross_val_score(estimator = classifier,X = X_train,y=y_train,cv = 10)
-#accuracies.mean()
-#accuracies.sd()
-#
-##Applying Grid search to find best model and best parameters
-##balanced tree
-#from sklearn.model_selection import GridSearchCV
-#parameters = [{'criterion' : ["gini","entropy"]},
-#              {'max_features': [3,5,10]},
-#              {'min_samples_leaf': [1,5,10]},
-#              {'max_depth': [2,4,8,16,None]},
-#              {'class_weight': "balanced"}]
-#
-#grid_search = GridSearchCV(estimator = classifier,
-#                           param_grid = parameters,
-#                           scoring = 'accuracy',
-#                           cv = 10,
-#                           n_jobs = -1)
-#grid_search = grid_search.fit(X_train, y_train)
-#best_accuracy = grid_search.best_score_
-#best_parameters = grid_search.best_params_
+#Applying k-fold cross validation
+
+from sklearn.model_selection import cross_val_score
+
+#---------------Cross Validation Recall -----------------
+
+recall = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'recall')
+recall.mean()
+recall.std()
+
+#---------------Cross Validation Precision -----------------
+
+precision = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'precision')
+precision.mean()
+precision.std()
+
+#---------------Cross Validation F1-Score -----------------
+
+f1_score = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'f1_weighted')
+f1_score.mean()
+f1_score.std()
+
+
+#Applying Grid search to find best model and best parameters
+#balanced tree
+from sklearn.model_selection import GridSearchCV
+parameters = [{'criterion' : ["gini"]},
+              {'max_features': [None]},
+              {'max_depth': [None]}]
+
+grid_search = GridSearchCV(estimator = classifier,
+                           param_grid = parameters,
+                           scoring = 'precision',
+                           cv = 5,
+                           n_jobs = -1)
+grid_search = grid_search.fit(X_train, y_train)
+best_precision = grid_search.best_score_
+best_parameters = grid_search.best_params_
 
 
 

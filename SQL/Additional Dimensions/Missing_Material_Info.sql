@@ -15,3 +15,14 @@ select A._eventID__,
 from stg.event_table_filtered A join stg.case_table_filtered B 
 on A._case_concept_name_ = B._case_concept_name_;
 Go
+
+select 
+ _case_concept_name_,
+		CASE WHEN _case_Spend_area_text_ like '' or _case_Sub_spend_area_text_ like '' THEN 1
+		 ELSE 0 END		AS is_material_missing,
+		_case_Spend_area_text_,
+		_case_Sub_spend_area_text_,
+		_case_Spend_classification_text_
+into [DIM].[case_missing_material_info]
+from stg.case_table_filtered;
+Go

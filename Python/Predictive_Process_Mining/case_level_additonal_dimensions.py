@@ -18,6 +18,9 @@ case_consolidated_dimensions = db.Table('case_consolidated_dimensions',metadata,
 #event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
 case_activity_count = db.Table('case_activity_count',metadata,autoload = True, autoload_with=engine)
 
+case_aggregated_resource_workload = db.Table('case_aggregated_resource_workload',metadata,autoload = True, autoload_with=engine)
+
+
 def FetchDatabaseTable(con,table_name):
 
     ResultProxy= con.execute(db.select([table_name]))
@@ -34,6 +37,11 @@ result_activity_count = FetchDatabaseTable(con,case_activity_count)
 df_case_activity_count = pd.DataFrame(result_activity_count)
 df_case_activity_count.columns = result_activity_count[0].keys()
 
+#Fetch the workload table
+result_case_aggregated_resource_workload = FetchDatabaseTable(con,case_aggregated_resource_workload)
+df_case_aggregated_resource_workload = pd.DataFrame(result_case_aggregated_resource_workload)
+df_case_aggregated_resource_workload.columns = result_case_aggregated_resource_workload[0].keys()
+
 #Filter the activity count on case concept and event concept name 
 #df_result_activity_count_filtered = df_result_activity_count.filter(['_case_concept_name_','_event_concept_name_'])
 #Pivot_table to get the case level count from event data
@@ -42,6 +50,7 @@ df_case_activity_count.columns = result_activity_count[0].keys()
 
 #Merge the two datasets from database as input for classification
 df_mergedSet = pd.merge(df_result,df_case_activity_count,on='_case_concept_name_')
+df_mergedSet = pd.merge(df_mergedSet,df_case_aggregated_resource_workload,on='_case_concept_name_')
 
 # Set the X and Y parameters for predictor and response variables
 #Categorical and numerical features seperation
@@ -49,9 +58,11 @@ X = df_mergedSet.drop(['is_compliant'],axis = 1)
 x_categorical_columns = ['_case_Document_Type_','_case_Item_Category_','_case_Spend_classification_text_','_case_Item_Type_','_case_Sub_spend_area_text_', 'process_cluster']
 X_Categorical = X.filter(x_categorical_columns)
 
+
+
 # Switch the commenting in the next to lines to include additional compliance values or not
 #x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','Sum_IR','Sum_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal','retrospective_POI','throughput_time_in_d']
-x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d']
+x_numerical_columns = ['number_of_handovers','count_rework','material_count','is_material_missing','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d'] + list(df_case_aggregated_resource_workload.columns)[0:(len(df_case_aggregated_resource_workload.columns)-1)]
 X_Numerical = X.filter(x_numerical_columns)
 
 numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'] + ['Sum_IR','Sum_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
@@ -137,7 +148,9 @@ Image(graph.create_png())
 
 
 df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
-    
+feature_value_more_than_0 = df_feature_importances[df_feature_importances['importance'] > 0.0009]
+feature_value_more_than_0.to_csv('feature_importances.csv')
+
 #Applying k-fold cross validation
 
 from sklearn.model_selection import cross_val_score
@@ -176,13 +189,6 @@ grid_search = GridSearchCV(estimator = classifier,
 grid_search = grid_search.fit(X_train, y_train)
 best_precision = grid_search.best_score_
 best_parameters = grid_search.best_params_
-
-
-#Exploratory Analyses
-
-import matplotlib.pyplot as plt
-
-plt.scatter(X.count_rework, y)
 
 
 

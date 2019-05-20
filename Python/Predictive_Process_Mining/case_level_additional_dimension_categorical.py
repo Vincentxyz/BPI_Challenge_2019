@@ -20,6 +20,7 @@ case_consolidated_dimensions = db.Table('case_consolidated_dimensions', metadata
 # event_activity_count = db.Table('event_activity_count',metadata,autoload = True, autoload_with=engine)
 case_activity_count = db.Table('case_activity_count', metadata, autoload=True, autoload_with=engine)
 
+case_aggregated_resource_workload = db.Table('case_aggregated_resource_workload',metadata,autoload = True, autoload_with=engine)
 
 def FetchDatabaseTable(con, table_name):
     ResultProxy = con.execute(db.select([table_name]))
@@ -42,9 +43,21 @@ df_case_activity_count.columns = result_activity_count[0].keys()
 # Pivot_table to get the case level count from event data
 # df_case_activity_count = df_result_activity_count_filtered.pivot_table(index = '_case_concept_name_', columns = '_event_concept_name_', aggfunc = len, fill_value = 0)
 
+#Fetch the workload table
+result_case_aggregated_resource_workload = FetchDatabaseTable(con,case_aggregated_resource_workload)
+df_case_aggregated_resource_workload = pd.DataFrame(result_case_aggregated_resource_workload)
+df_case_aggregated_resource_workload.columns = result_case_aggregated_resource_workload[0].keys()
+
+#Filter the activity count on case concept and event concept name 
+#df_result_activity_count_filtered = df_result_activity_count.filter(['_case_concept_name_','_event_concept_name_'])
+#Pivot_table to get the case level count from event data
+#df_case_activity_count = df_result_activity_count_filtered.pivot_table(index = '_case_concept_name_', columns = '_event_concept_name_', aggfunc = len, fill_value = 0)
+
+
 
 # Merge the two datasets from database as input for classification
 df_mergedSet = pd.merge(df_result, df_case_activity_count, on='_case_concept_name_')  # type: pandas.DataFrame
+df_mergedSet = pd.merge(df_mergedSet,df_case_aggregated_resource_workload,on='_case_concept_name_')
 
 # Delete objects to free up memory
 del case_activity_count, case_consolidated_dimensions, df_case_activity_count, result, result_activity_count
@@ -70,12 +83,36 @@ numeric_to_categorical(new_df, 'count_rework', [0, 1.5, 2.5, np.inf], ['<=1.5', 
 numeric_to_categorical(new_df, 'CreateOrder_NetVal', [0, 623.5, 2331.5, 6094.5, 30622.5, np.inf], \
                        ['<=623.5', '>623.5;<=2331.5', '>2331.5;<=6094.5', '>6094.5;<=30622.5', '>30622.5'])
 numeric_to_categorical(new_df, 'throughput_time_in_d', [0, 121.021, 190.354, 232.75, np.inf], \
-                       ['<=121.021', '>121.021;<=190.354', '<=232.75', '>232.75'])
+                       ['<=121.021', '>121.021;<=190.354', '>190.354;<=232.75', '>232.75'])
 numeric_to_categorical(new_df, 'number_of_handovers', [0, 3.5, np.inf], ['<=3.5', '>3.5'])
 numeric_to_categorical(new_df, 'number_of_orders_created_same_day_and_vendor', [0, 2.5, 4.5, 5.5, 19.5, 54, 85, np.inf], \
-                       ['<=2.5', '<=4.5', '<=5.5', '<=19.5', '<=54', '<=85', '>8.5'])
+                       ['<=2.5', '>2.5;<=4.5', '>4.5;<=5.5', '>5.5;<=19.5', '>19.5;<=54', '>54;<=85', '>85'])
+
+numeric_to_categorical(new_df, 'workload_avg_7_d_Cancel Goods Receipt', [0, 1.5, np.inf], \
+                       ['<=1.5', '>1.5'])
+numeric_to_categorical(new_df, 'workload_max_2_d_Clear Invoice', [0, 1.5, 116.5, 262.6, 278, 283.5, np.inf], \
+                       ['<=1.5', '>1.5; <=116.5', '>116.5; <=262.6', '>262.6; <=278','>278,<=283.5', '>283.5'])
+numeric_to_categorical(new_df, 'workload_avg_7_d_Create Purchase Order Item', [0, 86.5, np.inf], \
+                       ['<=86.5', '>86.5'])
+numeric_to_categorical(new_df, 'workload_avg_2_d_Clear Invoice', [0,5390.5, np.inf], \
+                       ['<=5390.5', '>5390.5'])
+numeric_to_categorical(new_df, 'workload_avg_2_d_Record Invoice Receipt', [0,273.5, np.inf], \
+                       ['<=273.5', '>273.5'])
+numeric_to_categorical(new_df, 'workload_avg_2_d_Receive Order Confirmation', [0,0.5, np.inf], \
+                       ['<=0.5', '>0.5'])
+numeric_to_categorical(new_df, 'workload_avg_2_d_Record Goods Receipt', [0,187, np.inf], \
+                       ['<=187', '>187'])
+numeric_to_categorical(new_df, 'workload_avg_7_d_Change Quantity', [0,10.5, np.inf], \
+                       ['<=10.5', '>10.5'])
+numeric_to_categorical(new_df, 'workload_max_7_d_Change Price', [0,25.5, np.inf], \
+                       ['<=25.5', '>25.5'])
+numeric_to_categorical(new_df, 'workload_max_7_d_Clear Invoice', [0, 2926.6, 3583, np.inf], \
+                       ['<=2926.6', '>2926.6; <=3583', '>3583'])
+numeric_to_categorical(new_df, 'workload_avg_2_d_Create Purchase Order Item', [0,263.5, np.inf], \
+                       ['<=263.5', '>263.5'])
 new_df['retrospective_POI'] = new_df['retrospective_POI'].astype('category')
 types = new_df.dtypes
+
 
 # %%
 y_column = 'is_compliant'
@@ -128,13 +165,7 @@ y.dtypes
 #%%
 #
 new_df = new_df.drop('is_compliant', axis = 1)
-#
-### wittgenstein rule set
-#import wittgenstein as lw
-##ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
-#irep_clf = lw.IREP()
-#df_concat = pd.concat([new_df, y], join = 'outer', axis = 1 )
-#irep_clf.fit(df_concat,class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
+
 
 #%%
 df_result['is_compliant'] = 1 - df_result.filter(['is_compliant'])
