@@ -50,7 +50,7 @@ X_Categorical = X.filter(x_categorical_columns)
 
 # Switch the commenting in the next to lines to include additional compliance values or not
 #x_numerical_columns = ['resource_count_case','is_material_missing','event_retrospective_POI','rework_count',,'CreateOrder_NetVal']
-x_numerical_columns = ['is_material_missing','event_retrospective_POI','rework_count','CreateOrder_NetVal','user_count','sod_create_poi_and_gr','sod_create_poi_and_ir', 'throughput']
+x_numerical_columns = ['is_material_missing','material_count','event_retrospective_POI','rework_count','CreateOrder_NetVal','user_count','sod_create_poi_and_gr','sod_create_poi_and_ir', 'throughput_time_in_d', 'task_load_past_seven_days', 'task_load_past_two_days']
 
    # values still missing for event level dimensions 'material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d']
 X_Numerical = X.filter(x_numerical_columns)
@@ -134,7 +134,8 @@ Image(graph.create_png())
 
 
 df_feature_importances = pd.DataFrame({'feature_name': feature_names, 'importance': classifier.feature_importances_})
-    
+feature_value_more_than_0 = df_feature_importances[df_feature_importances['importance'] > 0.0009]
+feature_value_more_than_0.to_csv('event_feature_importances.csv')
 
 #Applying k-fold cross validation
 

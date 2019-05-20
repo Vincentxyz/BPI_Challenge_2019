@@ -1,23 +1,20 @@
 ,feature_name,importance
-4,"_case_Item_Category__3-way match, invoice after GR",0.2968155237923695
-118,_case_Sub_spend_area_text__Raw Material,0.00403479259438217
-136,_case_Sub_spend_area_text__Surfactants,0.0038559885357375098
-152,process_cluster_01_02_01,0.012496742708209831
-161,number_of_handovers,0.003967875870511241
-162,count_rework,0.2853447900695858
-167,CreateOrder_NetVal,0.11744581744406274
-168,retrospective_POI,0.0722768267428766
-169,throughput_time_in_d,0.020840911134698683
-183,workload_avg_2_d_Clear Invoice,0.007350872885948618
-188,workload_avg_2_d_Receive Order Confirmation,0.003468209924900993
-189,workload_avg_2_d_Record Goods Receipt,0.002266091447046607
-190,workload_avg_2_d_Record Invoice Receipt,0.003470577561752365
-217,workload_max_2_d_Clear Invoice,0.027185342067047254
-239,workload_avg_7_d_Cancel Goods Receipt,0.053482735297344965
-247,workload_avg_7_d_Change Quantity,0.0015323599273308207
-251,workload_avg_7_d_Clear Invoice,0.006442506101824709
-252,workload_avg_7_d_Create Purchase Order Item,0.0076555669257811305
-280,workload_max_7_d_Change Price,0.0011897843331219085
-285,workload_max_7_d_Clear Invoice,0.001036978000838055
-306,number_of_orders_created_same_day_and_vendor,0.06397624866397454
-323,Cancel Invoice Receipt,0.0027271323596891506
+4,"_case_Item_Category__3-way match, invoice after GR",0.3313672217826873
+7,_case_Spend_classification_text__,0.00619976342233189
+19,_case_Sub_spend_area_text__Additives - Other,0.0030803888847775913
+118,_case_Sub_spend_area_text__Raw Material,0.004274633986722828
+152,process_cluster_01_02_01,0.0128257500203378
+161,number_of_handovers,0.0074278153197580325
+162,count_rework,0.3104649589379232
+167,CreateOrder_NetVal,0.09616760282151184
+168,retrospective_POI,0.06031505586759711
+169,throughput_time_in_d,0.025667056810003246
+171,workload_avg_2_d_Cancel Goods Receipt,0.05962118090204328
+217,workload_max_2_d_Clear Invoice,0.002108948582141954
+223,workload_max_2_d_Record Goods Receipt,0.0009889854122158283
+256,workload_avg_7_d_Receive Order Confirmation,0.004822180657380707
+281,workload_max_7_d_Change Quantity,0.0015302295576385624
+286,workload_max_7_d_Create Purchase Order Item,0.003748144284705581
+292,workload_max_7_d_Record Invoice Receipt,0.002320884430647217
+306,number_of_orders_created_same_day_and_vendor,0.06162493299781365
+323,Cancel Invoice Receipt,0.0023544492160465255

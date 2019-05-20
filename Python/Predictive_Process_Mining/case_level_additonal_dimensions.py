@@ -174,21 +174,6 @@ f1_score.mean()
 f1_score.std()
 
 
-#Applying Grid search to find best model and best parameters
-#balanced tree
-from sklearn.model_selection import GridSearchCV
-parameters = [{'criterion' : ["gini"]},
-              {'max_features': [None]},
-              {'max_depth': [None]}]
-
-grid_search = GridSearchCV(estimator = classifier,
-                           param_grid = parameters,
-                           scoring = 'precision',
-                           cv = 5,
-                           n_jobs = -1)
-grid_search = grid_search.fit(X_train, y_train)
-best_precision = grid_search.best_score_
-best_parameters = grid_search.best_params_
 
 
 

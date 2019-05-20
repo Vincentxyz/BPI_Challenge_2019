@@ -1,0 +1,23 @@
+,feature_name,importance
+4,"_case_Item_Category__3-way match, invoice after GR",0.2968155237923695
+118,_case_Sub_spend_area_text__Raw Material,0.00403479259438217
+136,_case_Sub_spend_area_text__Surfactants,0.0038559885357375098
+152,process_cluster_01_02_01,0.012496742708209831
+161,number_of_handovers,0.003967875870511241
+162,count_rework,0.2853447900695858
+167,CreateOrder_NetVal,0.11744581744406274
+168,retrospective_POI,0.0722768267428766
+169,throughput_time_in_d,0.020840911134698683
+183,workload_avg_2_d_Clear Invoice,0.007350872885948618
+188,workload_avg_2_d_Receive Order Confirmation,0.003468209924900993
+189,workload_avg_2_d_Record Goods Receipt,0.002266091447046607
+190,workload_avg_2_d_Record Invoice Receipt,0.003470577561752365
+217,workload_max_2_d_Clear Invoice,0.027185342067047254
+239,workload_avg_7_d_Cancel Goods Receipt,0.053482735297344965
+247,workload_avg_7_d_Change Quantity,0.0015323599273308207
+251,workload_avg_7_d_Clear Invoice,0.006442506101824709
+252,workload_avg_7_d_Create Purchase Order Item,0.0076555669257811305
+280,workload_max_7_d_Change Price,0.0011897843331219085
+285,workload_max_7_d_Clear Invoice,0.001036978000838055
+306,number_of_orders_created_same_day_and_vendor,0.06397624866397454
+323,Cancel Invoice Receipt,0.0027271323596891506

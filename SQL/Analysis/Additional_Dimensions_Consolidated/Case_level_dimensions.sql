@@ -7,6 +7,7 @@ select A._case_concept_name_,
 	   C.number_of_handovers,
 	   D.count_rework,
 	   F.material_count,
+	   K.is_material_missing,
 	   E.create_poi_and_gr AS sod_create_poi_and_gr,
 	   E.create_poi_and_ir AS sod_create_poi_and_ir,
 	   G.[retrospective_POI],
@@ -28,6 +29,7 @@ join DIM.case_retrospective_po_items G on B._case_concept_name_ = G._case_concep
 join DIM.case_throughput_time H on B._case_concept_name_ = H._case_concept_name_
 join DIM.case_number_of_orders_created_same_day_and_vendor I ON B._case_concept_name_ = I._case_concept_name_
 join [stg].[case_clustering] J ON B._case_concept_name_ = J._case_concept_name_
+join DIM.case_missing_material_info K ON B._case_concept_name_ = K._case_concept_name_
 where B.is_complete = 1;
 Go
 

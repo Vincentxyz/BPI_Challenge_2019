@@ -42,7 +42,6 @@ case_workload['_case_concept_name_'] = case_workload.index
 case_workload.to_csv('case_aggregated_resource_workload.csv', index = False)
 
 # --------------- Event Level -----------------
-i =0
 
 event_avg_workload_2d = pd.DataFrame(columns = avg_2_d.columns)
 
