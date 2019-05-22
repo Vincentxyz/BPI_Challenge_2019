@@ -77,6 +77,8 @@ def tree_to_table(tree, feature_names): # tree: DecisionTreeClassifier, feature_
 
     features_with_values = recurse(0, 1, features_with_values).drop_duplicates()
     
+    features_with_values.sort_values(['feature', 'value'])
+    
     return features_with_values
 
 

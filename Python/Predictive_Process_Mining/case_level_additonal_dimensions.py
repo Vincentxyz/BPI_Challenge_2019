@@ -105,11 +105,6 @@ classifier = DecisionTreeClassifier(criterion = 'gini',
 
 classifier.fit(X_train, y_train)
 
-## wittgenstein rule set
-#import wittgenstein as lw
-#ripper_clf = lw.RIPPER() # Or irep_clf = lw.IREP() to build a model using IREP
-#ripper_clf.fit(pd.concat([pd.DataFrame(X_train), y_train],axis=1),class_feat ='is_compliant' ) # Or call .fit with params train_X, train_y
-#ripper_clf
 
 
 # Predicting the Test set results

@@ -92,7 +92,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20
 from sklearn.tree import DecisionTreeClassifier
 classifier = DecisionTreeClassifier(criterion = 'gini',
                                     class_weight='balanced'
-                                     , max_depth = 6
+                                     , max_depth = 4
                                      , random_state = 0)
 
 classifier.fit(X_train, y_train)
@@ -114,7 +114,7 @@ from sklearn.metrics import precision_score,recall_score,f1_score
 precisionScore = precision_score(y_test, y_pred)
 recallScore = recall_score(y_test, y_pred)
 f1Score = f1_score(y_test, y_pred)
-#Grpahviz visulaisation
+#Graphviz visulaisation
 from graphviz import Source, render
 
 from sklearn.externals.six import StringIO  
