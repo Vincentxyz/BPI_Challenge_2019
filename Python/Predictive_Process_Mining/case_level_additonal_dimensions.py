@@ -62,7 +62,7 @@ X_Categorical = X.filter(x_categorical_columns)
 
 # Switch the commenting in the next to lines to include additional compliance values or not
 #x_numerical_columns = ['number_of_handovers','count_rework','material_count','sod_create_poi_and_gr','sod_create_poi_and_ir','Sum_IR','Sum_GR','CreateOrder_NetVal','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal','retrospective_POI','throughput_time_in_d']
-x_numerical_columns = ['number_of_handovers','count_rework','material_count','is_material_missing','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d'] + list(df_case_aggregated_resource_workload.columns)[0:(len(df_case_aggregated_resource_workload.columns)-1)]
+x_numerical_columns = ['number_of_handovers','count_rework','material_count','is_material_missing','sod_create_poi_and_gr','sod_create_poi_and_ir','CreateOrder_NetVal','retrospective_POI','throughput_time_in_d', 'number_of_orders_created_same_day_and_vendor'] + list(df_case_aggregated_resource_workload.columns)[0:(len(df_case_aggregated_resource_workload.columns)-1)]
 X_Numerical = X.filter(x_numerical_columns)
 
 numerical_categorical = x_categorical_columns + x_numerical_columns + ['_case_concept_name_','_case_Name_','_case_Vendor_'] + ['Sum_IR','Sum_GR','GR_NetVal','IR_NetVal','Deviation','CancelGR_NetVal','CancelIR_NetVal']
@@ -100,7 +100,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_total, y, test_size = 0.20
 from sklearn.tree import DecisionTreeClassifier
 classifier = DecisionTreeClassifier(criterion = 'gini',
                                     class_weight='balanced'
-                                     , max_depth = 6
+                                     , max_depth = 4
                                      , random_state = 0)
 
 classifier.fit(X_train, y_train)
@@ -128,7 +128,8 @@ from sklearn.metrics import precision_score,recall_score,f1_score
 precisionScore = precision_score(y_test, y_pred)
 recallScore = recall_score(y_test, y_pred)
 f1Score = f1_score(y_test, y_pred)
-#Grpahviz visulaisation
+
+#Graphviz visualization
 from graphviz import Source, render
 
 from sklearn.externals.six import StringIO  
@@ -158,20 +159,20 @@ from sklearn.model_selection import cross_val_score
 #---------------Cross Validation Recall -----------------
 
 recall = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'recall')
-recall.mean()
-recall.std()
+mean_recall = recall.mean()
+std_recall =recall.std()
 
 #---------------Cross Validation Precision -----------------
 
 precision = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'precision')
-precision.mean()
-precision.std()
+mean_precision = precision.mean()
+std_precision = precision.std()
 
 #---------------Cross Validation F1-Score -----------------
 
 f1_score = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'f1_weighted')
-f1_score.mean()
-f1_score.std()
+mean_f1 = f1_score.mean()
+std_f1 = f1_score.std()
 
 
 

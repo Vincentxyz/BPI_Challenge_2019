@@ -8,8 +8,8 @@ A.user_count,
 C.is_material_missing,
 M.material_count,
 --D.Open_POIs_at_the_moment,
-E.task_load_past_seven_days,
-E.task_load_past_two_days,
+ISNULL(E.task_load_past_seven_days,0) AS task_load_past_seven_days,
+ISNULL(E.task_load_past_two_days,0) AS task_load_past_two_days,
 F.event_retrospective_POI,
 G.rework_count,
 H.create_poi_and_gr AS sod_create_poi_and_gr,H.create_poi_and_ir AS sod_create_poi_and_ir,
@@ -25,7 +25,7 @@ join stg.case_table_filtered Y on Y._case_concept_name_ = X._case_concept_name_
 join DIM.event_handover_usercount A ON A._event_ID__ = X._event_ID__
 join DIM.event_missing_material_info C on C._eventID__ = X._event_ID__
 --join DIM.event_open_po_items D on D._event_ID__ = X._event_ID__
-join DIM.event_resource_workload E on E._eventID__ = X._event_ID__
+left join DIM.event_resource_workload E on E._eventID__ = X._event_ID__
 join DIM.event_retrospective_po_items F on F._eventID__ = X._event_ID__
 join DIM.event_rework_count G on G._eventID__ = X._event_ID__
 join DIM.event_segregation_of_duty H on H._event_ID__ = X._event_ID__

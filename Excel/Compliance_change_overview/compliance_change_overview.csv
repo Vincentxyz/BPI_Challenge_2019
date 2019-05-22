@@ -1,201 +1,160 @@
-,column,value,compliance_ratio,change
-0,_case_Item_Category_,"3-way match, invoice before GR",0.0016214386258753095,-0.5586091472855057
-1,_case_Item_Category_,"3-way match, invoice after GR",0.043627450980392155,10.876340851075765
-2,_case_Item_Category_,Consignment,0.005050129966580022,0.3747551937492794
-3,_case_Item_Category_,2-way match,0.006920415224913495,0.8838875110761295
-4,count_rework,<=1.5,0.002573855504949094,-0.2993405621627633
-5,count_rework,>1.5,0.03470515970515971,8.447499147606443
-6,CreateOrder_NetVal,<=2331.5,0.003006099234750239,-0.18167441961948536
-7,CreateOrder_NetVal,>12729.5,0.012278031456113649,2.342347152451607
-8,CreateOrder_NetVal,>2331.5;<=6097.5,0.0035750297919149325,-0.02679915036487973
-9,CreateOrder_NetVal,>6097.5;<=12729.5,0.005515302260192495,0.5013852074051623
-10,number_of_orders_created_same_day_and_vendor,<=4.5,0.008292406031738198,1.2573732431147915
-11,number_of_orders_created_same_day_and_vendor,>8.5;<=54,0.0026604846276977426,-0.27575823116994347
-12,number_of_orders_created_same_day_and_vendor,>4.5;<=6.5,0.003031245142235349,-0.1748291567954665
-13,number_of_orders_created_same_day_and_vendor,>6.5;<=8.5,0.0023589185265831974,-0.3578510815538905
-14,number_of_orders_created_same_day_and_vendor,>54,0.0016151426709359326,-0.5603230431277509
-15,throughput_time_in_d,>41.812;<=91.125,0.002494401454513204,-0.32096968244758806
-16,throughput_time_in_d,>100.667,0.006011121553884712,0.6363580009125102
-17,throughput_time_in_d,>14.687;<=41.812,0.0035472201734976995,-0.03436953322795032
-18,throughput_time_in_d,>91.125;<=100.667,0.0035408485160625764,-0.03610403693571502
-19,throughput_time_in_d,<=14.687,0.002198680791525085,-0.40147127746242106
-20,process_cluster,02_01,0.0,-1.0
-21,process_cluster,01_01_01,0.012422360248447204,2.3816365882049775
-22,process_cluster,01_01_02,0.0,-1.0
-23,process_cluster,02_02_01,0.0016863718913309367,-0.5409329004318676
-24,process_cluster,01_02_02,0.012712513401746056,2.460622586014942
-25,process_cluster,04,0.005050129966580022,0.3747551937492794
-26,process_cluster,01_02_01,0.2838983050847458,76.28329211221843
-27,process_cluster,02_02_03,0.0,-1.0
-28,process_cluster,02_02_02,0.0,-1.0
-29,process_cluster,01_02_03,0.0037174721189591076,0.011976748514872458
-30,process_cluster,03,0.006920415224913495,0.8838875110761295
-31,number_of_handovers,<=3.5,0.00525842385663876,0.4314573200469143
-32,number_of_handovers,>3.5; <= 4.5,0.0018517533124035545,-0.4959124813389334
-33,number_of_handovers,>4.5; <= 8.5,0.005265949386270647,0.4335059328579936
-34,number_of_handovers,>8.5,0.11377245508982035,29.971336297362356
-35,Cancel Invoice Receipt,<=0.5,0.00268005618431037,-0.2704304278696279
-36,Cancel Invoice Receipt,>0.5,0.045006717420510524,11.25180716870816
-37,retrospective_POI,0,0.0029581122276165746,-0.19473752645555845
-38,retrospective_POI,1,0.013315072662253671,2.6246523195874323
-39,workload_max_2_d_Clear Invoice,<=2830.5,0.0032100452500354523,-0.12615587938126474
-40,workload_max_2_d_Clear Invoice,>2830.5,0.003992405557428536,0.08681960899023466
-41,workload_avg_7_d_Create Purchase Order Item,<=74.5,0.00499544948933158,0.35986997879611027
-42,workload_avg_7_d_Create Purchase Order Item,>74.5,0.0032093611099277184,-0.12634211719545635
-43,_case_Spend_classification_text_,NPR,0.005474184981834178,0.490192190126399
-44,_case_Spend_classification_text_,OTHER,0.02019678922837908,4.498005214225545
-45,_case_Spend_classification_text_,,0.0038289725590299937,0.04232959291831796
-46,_case_Spend_classification_text_,PR,0.0025357638390507632,-0.3097099419369151
-47,_case_Sub_spend_area_text_,Facility Management,0.0,-1.0
-48,_case_Sub_spend_area_text_,Marketing Support Services,0.1,26.222174535050073
-49,_case_Sub_spend_area_text_,Digital Marketing,0.038461538461538464,9.470067128865413
-50,_case_Sub_spend_area_text_,Office Supplies,0.003472222222222222,-0.05478560642187261
-51,_case_Sub_spend_area_text_,HR Services,0.03389830508474576,8.227855774593245
-52,_case_Sub_spend_area_text_,Advertising,0.0,-1.0
-53,_case_Sub_spend_area_text_,ICT Software,0.0,-1.0
-54,_case_Sub_spend_area_text_,Laboratory Supplies & Services,0.0004977600796416127,-0.864498882354156
-55,_case_Sub_spend_area_text_,MRO (components),0.002545608824777259,-0.30702992273949764
-56,_case_Sub_spend_area_text_,Third Party Labor,0.0625,16.013859084406295
-57,_case_Sub_spend_area_text_,Design,0.012048192771084338,2.279780064463864
-58,_case_Sub_spend_area_text_,Consulting,0.0,-1.0
-59,_case_Sub_spend_area_text_,Raw Material,0.0034482758620689655,-0.06130432637758379
-60,_case_Sub_spend_area_text_,Communications,0.0,-1.0
-61,_case_Sub_spend_area_text_,Equipment,0.0,-1.0
-62,_case_Sub_spend_area_text_,Road Packed,0.4069400630914827,109.77793422780628
-63,_case_Sub_spend_area_text_,Express,0.0,-1.0
-64,_case_Sub_spend_area_text_,,0.0038289725590299937,0.04232959291831796
-65,_case_Sub_spend_area_text_,Technical Services,0.0,-1.0
-66,_case_Sub_spend_area_text_,Market Research,0.0,-1.0
-67,_case_Sub_spend_area_text_,Products for Resale,0.0034295850990440522,-0.06639235851015828
-68,_case_Sub_spend_area_text_,Color Collateral,0.002555366269165247,-0.30437373419803915
-69,_case_Sub_spend_area_text_,Real estate brokers or agents,0.0,-1.0
-70,_case_Sub_spend_area_text_,Process Automation & Instrumentation,0.0,-1.0
-71,_case_Sub_spend_area_text_,QHSE Services,0.0,-1.0
-72,_case_Sub_spend_area_text_,Sales Promotion,0.0,-1.0
-73,_case_Sub_spend_area_text_,ICT Services,0.0,-1.0
-74,_case_Sub_spend_area_text_,Travel & expenses,0.0,-1.0
-75,_case_Sub_spend_area_text_,Packaging,0.04183266932270916,10.387762255698236
-76,_case_Sub_spend_area_text_,Spectrophotometers,0.0,-1.0
-77,_case_Sub_spend_area_text_,Trading products (old structure),0.0011763977462695809,-0.6797589522840992
-78,_case_Sub_spend_area_text_,Other Logistics Services,0.0410958904109589,10.187195014404137
-79,_case_Sub_spend_area_text_,Public Relations,0.0,-1.0
-80,_case_Sub_spend_area_text_,Media,0.0,-1.0
-81,_case_Sub_spend_area_text_,Business Gifts & Promotional Items,0.0016207455429497568,-0.5587978195291724
-82,_case_Sub_spend_area_text_,Commercial Printing,0.027906976744186046,6.596885916758159
-83,_case_Sub_spend_area_text_,SOC&S - Other,0.0,-1.0
-84,_case_Sub_spend_area_text_,Labels,0.0017412770834710925,-0.5259865131986697
-85,_case_Sub_spend_area_text_,Plastic Containers & Lids < 30L,0.0010740459944402325,-0.7076213248067658
-86,_case_Sub_spend_area_text_,Metal Containers & Lids < 30L,0.0021667801646752926,-0.41015532178124653
-87,_case_Sub_spend_area_text_,Extenders,0.005529816170975938,0.5053362095304927
-88,_case_Sub_spend_area_text_,Alkyd Resins,0.0017482517482517483,-0.5240878577788449
-89,_case_Sub_spend_area_text_,Glycol & Ether Solvents,0.0032502708559046588,-0.11520559474376801
-90,_case_Sub_spend_area_text_,Defoamers & Antifoams,0.010123734533183352,1.7559006840883085
-91,_case_Sub_spend_area_text_,Surfactants,0.004098360655737705,0.11566289078074064
-92,_case_Sub_spend_area_text_,Driers & Antiskinning Agents,0.011725293132328308,2.1918797612286514
-93,_case_Sub_spend_area_text_,Mixing Machines,0.0,-1.0
-94,_case_Sub_spend_area_text_,Plastic Film,0.004524886877828055,0.2317726033959309
-95,_case_Sub_spend_area_text_,Biocides,0.000968054211035818,-0.7364745930779276
-96,_case_Sub_spend_area_text_,Waxes,0.01727447216890595,3.7024869638282274
-97,_case_Sub_spend_area_text_,Colorants,0.008333333333333333,1.2685145445875057
-98,_case_Sub_spend_area_text_,Chloride,0.0021231422505307855,-0.42203451093311956
-99,_case_Sub_spend_area_text_,Ester Solvents,0.011363636363636364,2.093428924437508
-100,_case_Sub_spend_area_text_,Customers,0.016816143497757848,3.577719933024115
-101,_case_Sub_spend_area_text_,Opaque Polymers,0.0064516129032258064,0.75626932484194
-102,_case_Sub_spend_area_text_,Light & Heat Stabilizers,0.0,-1.0
-103,_case_Sub_spend_area_text_,Rheology & Thixotropic Agents,0.01040988939492518,1.8337982599922
-104,_case_Sub_spend_area_text_,Bags,0.0,-1.0
-105,_case_Sub_spend_area_text_,Pure Acrylics,0.00985663082437276,1.683189246286297
-106,_case_Sub_spend_area_text_,Styrene Acrylics,0.004487658937920718,0.2216383486185521
-107,_case_Sub_spend_area_text_,Carbon Black Pigments,0.0,-1.0
-108,_case_Sub_spend_area_text_,Aliphatic Solvents,0.0,-1.0
-109,_case_Sub_spend_area_text_,Neutralisation Agents,0.0,-1.0
-110,_case_Sub_spend_area_text_,Vinyl Acetate Ethylenes,0.00881057268722467,1.3984294744537509
-111,_case_Sub_spend_area_text_,Vinyl Acrylics,0.005825242718446602,0.5857577399058294
-112,_case_Sub_spend_area_text_,Drums,0.0,-1.0
-113,_case_Sub_spend_area_text_,Aromatic Solvents,0.010416666666666666,1.835643180734382
-114,_case_Sub_spend_area_text_,Specialty Resins - Other,0.00546448087431694,0.48755052104098745
-115,_case_Sub_spend_area_text_,Inorganic Pigments,0.0,-1.0
-116,_case_Sub_spend_area_text_,Sea,0.09090909090909091,23.747431395500065
-117,_case_Sub_spend_area_text_,Organic Pigments,0.0070921985815602835,0.9306506762446858
-118,_case_Sub_spend_area_text_,Pallets,0.008695652173913044,1.3671456117434844
-119,_case_Sub_spend_area_text_,Alcohol Solvents,0.0,-1.0
-120,_case_Sub_spend_area_text_,Polyester Resins - Liquid,0.0,-1.0
-121,_case_Sub_spend_area_text_,Monomers - Styrene,0.0,-1.0
-122,_case_Sub_spend_area_text_,Fire Protection Agents,0.0,-1.0
-123,_case_Sub_spend_area_text_,Closures,0.0,-1.0
-124,_case_Sub_spend_area_text_,Packaging - Other,0.002577319587628866,-0.29839756352963737
-125,_case_Sub_spend_area_text_,Jerry Cans,0.0,-1.0
-126,_case_Sub_spend_area_text_,Isocyanates,0.0,-1.0
-127,_case_Sub_spend_area_text_,Warehousing,0.0,-1.0
-128,_case_Sub_spend_area_text_,Catalysts & Initiators,0.0,-1.0
-129,_case_Sub_spend_area_text_,Additives - Other,0.0078125,1.1267323855507867
-130,_case_Sub_spend_area_text_,Corrosion Inhibitors,0.0,-1.0
-131,_case_Sub_spend_area_text_,Specialty Resins Precursors,0.009174311926605505,1.4974472050504652
-132,_case_Sub_spend_area_text_,Commodity Resins Precursors,0.00980392156862745,1.6688406406911833
-133,_case_Sub_spend_area_text_,Sulphate,0.005494505494505495,0.49572387555220176
-134,_case_Sub_spend_area_text_,Acrylic Resins � Liquid,0.0,-1.0
-135,_case_Sub_spend_area_text_,Ketones Solvents,0.0,-1.0
-136,_case_Sub_spend_area_text_,Epoxy Resins - Liquid,0.0,-1.0
-137,_case_Sub_spend_area_text_,Paperboard,0.000992063492063492,-0.7299387446919636
-138,_case_Sub_spend_area_text_,Latexes - Other,0.0,-1.0
-139,_case_Sub_spend_area_text_,Plasticizers,0.0,-1.0
-140,_case_Sub_spend_area_text_,UV Resins,0.0,-1.0
-141,_case_Sub_spend_area_text_,Intermediate Bulk Containers (IBC),0.0,-1.0
-142,_case_Sub_spend_area_text_,Polyurethane Resins,0.06060606060606061,15.498287597000044
-143,_case_Sub_spend_area_text_,Polyamides & Polyamines,0.0,-1.0
-144,_case_Sub_spend_area_text_,Effect Pigments,0.008888888888888889,1.4197488475600062
-145,_case_Sub_spend_area_text_,Polyvinyl Acetates,0.0,-1.0
-146,_case_Sub_spend_area_text_,Spend Area Unidentified,0.0,-1.0
-147,_case_Sub_spend_area_text_,Cartridges,0.0,-1.0
-148,_case_Sub_spend_area_text_,Bottles,0.0,-1.0
-149,_case_Sub_spend_area_text_,Tubes,0.0,-1.0
-150,_case_Sub_spend_area_text_,Amino Resins,0.0,-1.0
-151,_case_Sub_spend_area_text_,Caseins & Starches,0.0,-1.0
-152,_case_Sub_spend_area_text_,Adhesion Promotors,0.0,-1.0
-153,_case_Sub_spend_area_text_,Point of Sales,0.0025188916876574307,-0.31430290843702596
-154,_case_Sub_spend_area_text_,Catalysts (C&I),0.0,-1.0
-155,_case_Sub_spend_area_text_,Utilities,0.0,-1.0
-156,_case_Sub_spend_area_text_,Hybrid Containers,0.0,-1.0
-157,_case_Sub_spend_area_text_,Transport & Hoisting Equipment,0.0,-1.0
-158,_case_Sub_spend_area_text_,Sachets,0.0,-1.0
-159,_case_Sub_spend_area_text_,Gasses,0.0,-1.0
-160,_case_Sub_spend_area_text_,ICT Hardware,0.0,-1.0
-161,_case_Sub_spend_area_text_,Epoxy Resins - Solid,0.0,-1.0
-162,_case_Sub_spend_area_text_,Exhibitions & seminars,0.0,-1.0
-163,_case_Sub_spend_area_text_,LOGISTICS - TO BE APPROVED,0.0,-1.0
-164,_case_Sub_spend_area_text_,Solvents - Other,0.0,-1.0
-165,_case_Sub_spend_area_text_,Transport Intersite,0.0,-1.0
-166,_case_Sub_spend_area_text_,Semi-Finished Materials,0.0,-1.0
-167,_case_Sub_spend_area_text_,Marketing - To Be Approved,0.0,-1.0
-168,_case_Sub_spend_area_text_,Others - TBH,0.0,-1.0
-169,_case_Sub_spend_area_text_,Pigments - Other,0.0,-1.0
-170,_case_Sub_spend_area_text_,Monomers - Hydroxy,0.0,-1.0
-171,_case_Sub_spend_area_text_,Business park,0.0,-1.0
-172,_case_Sub_spend_area_text_,Real Estate - To Be Approved,0.0,-1.0
-173,_case_Sub_spend_area_text_,Escrow and title services,0.0,-1.0
-174,_case_Sub_spend_area_text_,Insurances,0.0,-1.0
-175,_case_Sub_spend_area_text_,Government payments,0.09090909090909091,23.747431395500065
-176,_case_Sub_spend_area_text_,Real estate services,0.0,-1.0
-177,_case_Sub_spend_area_text_,Electricity,0.0,-1.0
-178,_case_Sub_spend_area_text_,Polyvinyl Alcohols,0.0,-1.0
-179,_case_Sub_spend_area_text_,Legal,0.0,-1.0
-180,Change Approval for Purchase Order,0,0.003678578253391936,0.001388992546749244
-181,Change Approval for Purchase Order,1,0.0031662269129287598,-0.1380841835868052
-182,workload_avg_2_d_Record Goods Receipt,<=26.5,0.0056443515779761744,0.536515237928527
-183,workload_avg_2_d_Record Goods Receipt,>26.5,0.0024274967619080296,-0.3391825946407073
-184,workload_avg_7_d_Change Quantity,<=10.5,0.0035905232626636074,-0.02258149071613851
-185,workload_avg_7_d_Change Quantity,>10.5,0.004901960784313725,0.33442032034559166
-186,workload_max_7_d_Change Price,<=263.5,0.0036722819549469825,-0.00032499680518363177
-187,workload_max_7_d_Change Price,>263.5,0.003816793893129771,0.03901429523091868
-188,workload_avg_7_d_Receive Order Confirmation,<=0.5,0.003969901249437256,0.0806934469909433
-189,workload_avg_7_d_Receive Order Confirmation,>0.5,0.001039176971838304,-0.7171134309981287
-190,workload_max_2_d_Record Goods Receipt,<=98,0.004613337276356646,0.2558507252603314
-191,workload_max_2_d_Record Goods Receipt,>98,0.0013630663540701161,-0.6289436980664894
-192,workload_max_7_d_Record Invoice Receipt,<=1089.5,0.0038436490403646996,0.04632485028285566
-193,workload_max_7_d_Record Invoice Receipt,>1089.5,0.002881673152906925,-0.2155459047859966
-194,workload_max_7_d_Remove Payment Block,<=1419,0.0037084448155941478,0.00951932023705463
-195,workload_max_7_d_Remove Payment Block,>1419,0.0029034599564481006,-0.2096150631004093
-196,workload_max_2_d_Remove Payment Block,<=754.5,0.0037389530931339226,0.017824336796569622
-197,workload_max_2_d_Remove Payment Block,>754.5,0.0012153129430828439,-0.6691653894869346
-198,workload_avg_2_d_Create Purchase Order Item,<=263.5,0.003738035861444907,0.017574646385294993
-199,workload_avg_2_d_Create Purchase Order Item,>263.5,0.0010813148788927337,-0.7056425763943548
+column,value,imcompl. ratio,change to total incompl.
+count_rework,<=0.5,0.002236945563594473,-0.3910547744242531
+count_rework,>0.5,0.012662090007627766,2.446896241661565
+CreateOrder_NetVal,<=12729.5,0.003203493914470038,-0.12793929538325868
+CreateOrder_NetVal,>12729.5,0.012278031456113649,2.342347152451607
+number_of_orders_created_same_day_and_vendor,<=4.5,0.008292406031738198,1.2573732431147915
+number_of_orders_created_same_day_and_vendor,>8.5;<=54.0,0.0026604846276977426,-0.27575823116994347
+number_of_orders_created_same_day_and_vendor,>4.5;<=8.5,0.002721031480241125,-0.25927606129510444
+number_of_orders_created_same_day_and_vendor,>54.0,0.0016151426709359326,-0.5603230431277509
+retrospective_POI,<=0.5,0.0029581122276165746,-0.19473752645555845
+retrospective_POI,>0.5,0.013315072662253671,2.6246523195874323
+Cancel Goods Receipt,<=0.5,0.0030128123810731957,-0.17984695521065683
+Cancel Goods Receipt,>0.5,0.11824014665444546,31.18753909277231
+workload_max_7_d_Change Quantity,<=10.5,0.003585013633150436,-0.02408133167844869
+workload_max_7_d_Change Quantity,>10.5,0.004982974835977079,0.3564741068873053
+throughput_time_in_d,<=91.125,0.0027248176716958552,-0.2582453776490667
+throughput_time_in_d,>91.125,0.00543502740034532,0.47953264494979747
+number_of_handovers,<=4.5,0.0029273834144068044,-0.2031025776200716
+number_of_handovers,>4.5,0.005608111935648332,0.5266500192431638
+_case_Item_Category_,"3-way match, invoice before GR",0.0016214386258753095,-0.5586091472855057
+_case_Item_Category_,"3-way match, invoice after GR",0.043627450980392155,10.876340851075765
+_case_Item_Category_,Consignment,0.005050129966580022,0.3747551937492794
+_case_Item_Category_,2-way match,0.006920415224913495,0.8838875110761295
+_case_Spend_classification_text_,NPR,0.005474184981834178,0.490192190126399
+_case_Spend_classification_text_,OTHER,0.02019678922837908,4.498005214225545
+_case_Spend_classification_text_,,0.0038289725590299937,0.04232959291831796
+_case_Spend_classification_text_,PR,0.0025357638390507632,-0.3097099419369151
+_case_Sub_spend_area_text_,Facility Management,0.0,-1.0
+_case_Sub_spend_area_text_,Marketing Support Services,0.1,26.222174535050073
+_case_Sub_spend_area_text_,Digital Marketing,0.038461538461538464,9.470067128865413
+_case_Sub_spend_area_text_,Office Supplies,0.003472222222222222,-0.05478560642187261
+_case_Sub_spend_area_text_,HR Services,0.03389830508474576,8.227855774593245
+_case_Sub_spend_area_text_,Advertising,0.0,-1.0
+_case_Sub_spend_area_text_,ICT Software,0.0,-1.0
+_case_Sub_spend_area_text_,Laboratory Supplies & Services,0.0004977600796416127,-0.864498882354156
+_case_Sub_spend_area_text_,MRO (components),0.002545608824777259,-0.30702992273949764
+_case_Sub_spend_area_text_,Third Party Labor,0.0625,16.013859084406295
+_case_Sub_spend_area_text_,Design,0.012048192771084338,2.279780064463864
+_case_Sub_spend_area_text_,Consulting,0.0,-1.0
+_case_Sub_spend_area_text_,Raw Material,0.0034482758620689655,-0.06130432637758379
+_case_Sub_spend_area_text_,Communications,0.0,-1.0
+_case_Sub_spend_area_text_,Equipment,0.0,-1.0
+_case_Sub_spend_area_text_,Road Packed,0.4069400630914827,109.77793422780628
+_case_Sub_spend_area_text_,Express,0.0,-1.0
+_case_Sub_spend_area_text_,,0.0038289725590299937,0.04232959291831796
+_case_Sub_spend_area_text_,Technical Services,0.0,-1.0
+_case_Sub_spend_area_text_,Market Research,0.0,-1.0
+_case_Sub_spend_area_text_,Products for Resale,0.0034295850990440522,-0.06639235851015828
+_case_Sub_spend_area_text_,Color Collateral,0.002555366269165247,-0.30437373419803915
+_case_Sub_spend_area_text_,Real estate brokers or agents,0.0,-1.0
+_case_Sub_spend_area_text_,Process Automation & Instrumentation,0.0,-1.0
+_case_Sub_spend_area_text_,QHSE Services,0.0,-1.0
+_case_Sub_spend_area_text_,Sales Promotion,0.0,-1.0
+_case_Sub_spend_area_text_,ICT Services,0.0,-1.0
+_case_Sub_spend_area_text_,Travel & expenses,0.0,-1.0
+_case_Sub_spend_area_text_,Packaging,0.04183266932270916,10.387762255698236
+_case_Sub_spend_area_text_,Spectrophotometers,0.0,-1.0
+_case_Sub_spend_area_text_,Trading products (old structure),0.0011763977462695809,-0.6797589522840992
+_case_Sub_spend_area_text_,Other Logistics Services,0.0410958904109589,10.187195014404137
+_case_Sub_spend_area_text_,Public Relations,0.0,-1.0
+_case_Sub_spend_area_text_,Media,0.0,-1.0
+_case_Sub_spend_area_text_,Business Gifts & Promotional Items,0.0016207455429497568,-0.5587978195291724
+_case_Sub_spend_area_text_,Commercial Printing,0.027906976744186046,6.596885916758159
+_case_Sub_spend_area_text_,SOC&S - Other,0.0,-1.0
+_case_Sub_spend_area_text_,Labels,0.0017412770834710925,-0.5259865131986697
+_case_Sub_spend_area_text_,Plastic Containers & Lids < 30L,0.0010740459944402325,-0.7076213248067658
+_case_Sub_spend_area_text_,Metal Containers & Lids < 30L,0.0021667801646752926,-0.41015532178124653
+_case_Sub_spend_area_text_,Extenders,0.005529816170975938,0.5053362095304927
+_case_Sub_spend_area_text_,Alkyd Resins,0.0017482517482517483,-0.5240878577788449
+_case_Sub_spend_area_text_,Glycol & Ether Solvents,0.0032502708559046588,-0.11520559474376801
+_case_Sub_spend_area_text_,Defoamers & Antifoams,0.010123734533183352,1.7559006840883085
+_case_Sub_spend_area_text_,Surfactants,0.004098360655737705,0.11566289078074064
+_case_Sub_spend_area_text_,Driers & Antiskinning Agents,0.011725293132328308,2.1918797612286514
+_case_Sub_spend_area_text_,Mixing Machines,0.0,-1.0
+_case_Sub_spend_area_text_,Plastic Film,0.004524886877828055,0.2317726033959309
+_case_Sub_spend_area_text_,Biocides,0.000968054211035818,-0.7364745930779276
+_case_Sub_spend_area_text_,Waxes,0.01727447216890595,3.7024869638282274
+_case_Sub_spend_area_text_,Colorants,0.008333333333333333,1.2685145445875057
+_case_Sub_spend_area_text_,Chloride,0.0021231422505307855,-0.42203451093311956
+_case_Sub_spend_area_text_,Ester Solvents,0.011363636363636364,2.093428924437508
+_case_Sub_spend_area_text_,Customers,0.016816143497757848,3.577719933024115
+_case_Sub_spend_area_text_,Opaque Polymers,0.0064516129032258064,0.75626932484194
+_case_Sub_spend_area_text_,Light & Heat Stabilizers,0.0,-1.0
+_case_Sub_spend_area_text_,Rheology & Thixotropic Agents,0.01040988939492518,1.8337982599922
+_case_Sub_spend_area_text_,Bags,0.0,-1.0
+_case_Sub_spend_area_text_,Pure Acrylics,0.00985663082437276,1.683189246286297
+_case_Sub_spend_area_text_,Styrene Acrylics,0.004487658937920718,0.2216383486185521
+_case_Sub_spend_area_text_,Carbon Black Pigments,0.0,-1.0
+_case_Sub_spend_area_text_,Aliphatic Solvents,0.0,-1.0
+_case_Sub_spend_area_text_,Neutralisation Agents,0.0,-1.0
+_case_Sub_spend_area_text_,Vinyl Acetate Ethylenes,0.00881057268722467,1.3984294744537509
+_case_Sub_spend_area_text_,Vinyl Acrylics,0.005825242718446602,0.5857577399058294
+_case_Sub_spend_area_text_,Drums,0.0,-1.0
+_case_Sub_spend_area_text_,Aromatic Solvents,0.010416666666666666,1.835643180734382
+_case_Sub_spend_area_text_,Specialty Resins - Other,0.00546448087431694,0.48755052104098745
+_case_Sub_spend_area_text_,Inorganic Pigments,0.0,-1.0
+_case_Sub_spend_area_text_,Sea,0.09090909090909091,23.747431395500065
+_case_Sub_spend_area_text_,Organic Pigments,0.0070921985815602835,0.9306506762446858
+_case_Sub_spend_area_text_,Pallets,0.008695652173913044,1.3671456117434844
+_case_Sub_spend_area_text_,Alcohol Solvents,0.0,-1.0
+_case_Sub_spend_area_text_,Polyester Resins - Liquid,0.0,-1.0
+_case_Sub_spend_area_text_,Monomers - Styrene,0.0,-1.0
+_case_Sub_spend_area_text_,Fire Protection Agents,0.0,-1.0
+_case_Sub_spend_area_text_,Closures,0.0,-1.0
+_case_Sub_spend_area_text_,Packaging - Other,0.002577319587628866,-0.29839756352963737
+_case_Sub_spend_area_text_,Jerry Cans,0.0,-1.0
+_case_Sub_spend_area_text_,Isocyanates,0.0,-1.0
+_case_Sub_spend_area_text_,Warehousing,0.0,-1.0
+_case_Sub_spend_area_text_,Catalysts & Initiators,0.0,-1.0
+_case_Sub_spend_area_text_,Additives - Other,0.0078125,1.1267323855507867
+_case_Sub_spend_area_text_,Corrosion Inhibitors,0.0,-1.0
+_case_Sub_spend_area_text_,Specialty Resins Precursors,0.009174311926605505,1.4974472050504652
+_case_Sub_spend_area_text_,Commodity Resins Precursors,0.00980392156862745,1.6688406406911833
+_case_Sub_spend_area_text_,Sulphate,0.005494505494505495,0.49572387555220176
+_case_Sub_spend_area_text_,Acrylic Resins � Liquid,0.0,-1.0
+_case_Sub_spend_area_text_,Ketones Solvents,0.0,-1.0
+_case_Sub_spend_area_text_,Epoxy Resins - Liquid,0.0,-1.0
+_case_Sub_spend_area_text_,Paperboard,0.000992063492063492,-0.7299387446919636
+_case_Sub_spend_area_text_,Latexes - Other,0.0,-1.0
+_case_Sub_spend_area_text_,Plasticizers,0.0,-1.0
+_case_Sub_spend_area_text_,UV Resins,0.0,-1.0
+_case_Sub_spend_area_text_,Intermediate Bulk Containers (IBC),0.0,-1.0
+_case_Sub_spend_area_text_,Polyurethane Resins,0.06060606060606061,15.498287597000044
+_case_Sub_spend_area_text_,Polyamides & Polyamines,0.0,-1.0
+_case_Sub_spend_area_text_,Effect Pigments,0.008888888888888889,1.4197488475600062
+_case_Sub_spend_area_text_,Polyvinyl Acetates,0.0,-1.0
+_case_Sub_spend_area_text_,Spend Area Unidentified,0.0,-1.0
+_case_Sub_spend_area_text_,Cartridges,0.0,-1.0
+_case_Sub_spend_area_text_,Bottles,0.0,-1.0
+_case_Sub_spend_area_text_,Tubes,0.0,-1.0
+_case_Sub_spend_area_text_,Amino Resins,0.0,-1.0
+_case_Sub_spend_area_text_,Caseins & Starches,0.0,-1.0
+_case_Sub_spend_area_text_,Adhesion Promotors,0.0,-1.0
+_case_Sub_spend_area_text_,Point of Sales,0.0025188916876574307,-0.31430290843702596
+_case_Sub_spend_area_text_,Catalysts (C&I),0.0,-1.0
+_case_Sub_spend_area_text_,Utilities,0.0,-1.0
+_case_Sub_spend_area_text_,Hybrid Containers,0.0,-1.0
+_case_Sub_spend_area_text_,Transport & Hoisting Equipment,0.0,-1.0
+_case_Sub_spend_area_text_,Sachets,0.0,-1.0
+_case_Sub_spend_area_text_,Gasses,0.0,-1.0
+_case_Sub_spend_area_text_,ICT Hardware,0.0,-1.0
+_case_Sub_spend_area_text_,Epoxy Resins - Solid,0.0,-1.0
+_case_Sub_spend_area_text_,Exhibitions & seminars,0.0,-1.0
+_case_Sub_spend_area_text_,LOGISTICS - TO BE APPROVED,0.0,-1.0
+_case_Sub_spend_area_text_,Solvents - Other,0.0,-1.0
+_case_Sub_spend_area_text_,Transport Intersite,0.0,-1.0
+_case_Sub_spend_area_text_,Semi-Finished Materials,0.0,-1.0
+_case_Sub_spend_area_text_,Marketing - To Be Approved,0.0,-1.0
+_case_Sub_spend_area_text_,Others - TBH,0.0,-1.0
+_case_Sub_spend_area_text_,Pigments - Other,0.0,-1.0
+_case_Sub_spend_area_text_,Monomers - Hydroxy,0.0,-1.0
+_case_Sub_spend_area_text_,Business park,0.0,-1.0
+_case_Sub_spend_area_text_,Real Estate - To Be Approved,0.0,-1.0
+_case_Sub_spend_area_text_,Escrow and title services,0.0,-1.0
+_case_Sub_spend_area_text_,Insurances,0.0,-1.0
+_case_Sub_spend_area_text_,Government payments,0.09090909090909091,23.747431395500065
+_case_Sub_spend_area_text_,Real estate services,0.0,-1.0
+_case_Sub_spend_area_text_,Electricity,0.0,-1.0
+_case_Sub_spend_area_text_,Polyvinyl Alcohols,0.0,-1.0
+_case_Sub_spend_area_text_,Legal,0.0,-1.0

@@ -144,37 +144,17 @@ from sklearn.model_selection import cross_val_score
 #---------------Cross Validation Recall -----------------
 
 recall = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'recall')
-recall.mean()
-recall.std()
+mean_recall = recall.mean()
+std_recall =recall.std()
 
 #---------------Cross Validation Precision -----------------
 
 precision = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'precision')
-precision.mean()
-precision.std()
+mean_precision = precision.mean()
+std_precision = precision.std()
 
 #---------------Cross Validation F1-Score -----------------
 
 f1_score = cross_val_score(estimator = classifier,X = X_total,y=y,cv = 5, scoring = 'f1_weighted')
-f1_score.mean()
-f1_score.std()
-
-
-#Applying Grid search to find best model and best parameters
-#balanced tree
-from sklearn.model_selection import GridSearchCV
-parameters = [{'criterion' : ["gini"]},
-              {'max_features': [None]},
-              {'max_depth': [None]}]
-
-grid_search = GridSearchCV(estimator = classifier,
-                           param_grid = parameters,
-                           scoring = 'precision',
-                           cv = 5,
-                           n_jobs = -1)
-grid_search = grid_search.fit(X_train, y_train)
-best_precision = grid_search.best_score_
-best_parameters = grid_search.best_params_
-
-
-
+mean_f1 = f1_score.mean()
+std_f1 = f1_score.std()

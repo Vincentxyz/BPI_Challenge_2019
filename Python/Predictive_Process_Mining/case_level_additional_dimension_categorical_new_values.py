@@ -68,74 +68,103 @@ column_names = list(df_mergedSet.columns.values)
 for column_name in column_names:
     df_mergedSet[column_name] = df_mergedSet[column_name].astype('category')
 '''
+# %%
+from sklearn.tree import _tree # IMPORTANT: _tree, NOT tree
+
+def tree_to_table(tree, feature_names): # tree: DecisionTreeClassifier, feature_names: list of feature names
+    features_with_values = pd.DataFrame(columns=['feature','value'])
+    tree_ = tree.tree_
+    feature_name = [
+        feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
+        for i in tree_.feature
+    ]
+
+    def recurse(node, depth, features_with_values):
+        
+        if tree_.feature[node] != _tree.TREE_UNDEFINED:
+            name = feature_name[node]
+            threshold = tree_.threshold[node]
+            features_with_values = features_with_values.append({'feature' : name, 'value' : threshold}, ignore_index= True)
+            features_with_values = features_with_values.append(recurse(tree_.children_left[node], depth + 1, features_with_values))
+            features_with_values = features_with_values.append({'feature' : name, 'value' : threshold}, ignore_index= True)
+            features_with_values = features_with_values.append(recurse(tree_.children_right[node], depth + 1, features_with_values))
+            
+            return features_with_values
+
+    features_with_values = recurse(0, 1, features_with_values).drop_duplicates()
+    
+    features_with_values.sort_values(['feature', 'value'])
+    
+    return features_with_values
+
+# %%
+def get_category_names(numerical_range):
+
+    category_names = []
+    
+    category_names.append('<=' + str(numerical_range[1]))
+    
+    for i in range(2,len(numerical_range)-1):
+        category_names.append('>' + str(numerical_range[i-1]) + ';<=' + str(numerical_range[i]))
+        
+    category_names.append('>' + str(numerical_range[len(numerical_range)-2]))
+    
+    return category_names
+
 
 # %%
 
 
-def numeric_to_categorical(dataframe, column_name, numerical_range, category_names):
+def numeric_to_categorical(dataframe, column_name):
+
+    numerical_range = get_value_list(column_name)
+    category_names = get_category_names(numerical_range)
     dataframe[column_name] = pd.cut(dataframe[column_name], numerical_range, labels=category_names, \
                                     right=False, include_lowest=True)
 
 
 # %%
+
+
+def get_value_list(feature_name):
+    value_list = [0]
+    value_list = value_list + list(features_with_values[features_with_values['feature'] == feature_name].sort_values('value')['value'])
+    value_list.append(np.inf)
+    
+    return value_list
+
+# %%
+
 new_df = df_mergedSet.copy(deep=True)  # type: pandas.Dataframe
-numeric_to_categorical(new_df, 'count_rework', [0, 1.5,  np.inf], ['<=1.5', '>1.5'])
-numeric_to_categorical(new_df, 'CreateOrder_NetVal', [0, 2331.5, 6097.5, 12729.5, np.inf], \
-                       ['<=2331.5',  '>2331.5;<=6097.5', '>6097.5;<=12729.5', '>12729.5'])
-numeric_to_categorical(new_df, 'throughput_time_in_d', [0, 14.687, 41.812, 91.125, 100.667, np.inf], \
-                       ['<=14.687', '>14.687;<=41.812','>41.812;<=91.125', '>91.125;<=100.667','>100.667'])
-numeric_to_categorical(new_df, 'number_of_handovers', [0, 3.5, 4.5, 8.5, np.inf], \
-                       ['<=3.5', '>3.5; <= 4.5', '>4.5; <= 8.5','>8.5'])
-numeric_to_categorical(new_df, 'number_of_orders_created_same_day_and_vendor', [0,4.5, 6.5, 8.5, 54, np.inf], \
-                       ['<=4.5', '>4.5;<=6.5', '>6.5;<=8.5', '>8.5;<=54', '>54'])
 
+numericals_and_activities = list(activity_names) + x_numerical_columns
 
-numeric_to_categorical(new_df, 'workload_max_2_d_Clear Invoice', [0, 2830.5, np.inf], \
-                       ['<=2830.5', '>2830.5'])
-numeric_to_categorical(new_df, 'workload_avg_7_d_Create Purchase Order Item', [0, 74.5, np.inf], \
-                       ['<=74.5', '>74.5'])
+features_with_values = tree_to_table(classifier,new_list_features)
 
-numeric_to_categorical(new_df, 'workload_avg_2_d_Record Goods Receipt', [0,26.5, np.inf], \
-                       ['<=26.5', '>26.5'])
-numeric_to_categorical(new_df, 'workload_avg_7_d_Change Quantity', [0,10.5, np.inf], \
-                       ['<=10.5', '>10.5'])
-numeric_to_categorical(new_df, 'workload_max_7_d_Change Price', [0,263.5, np.inf], \
-                       ['<=263.5', '>263.5'])
-numeric_to_categorical(new_df, 'workload_avg_7_d_Receive Order Confirmation', [0,0.5, np.inf], \
-                       ['<=0.5', '>0.5'])
-numeric_to_categorical(new_df, 'workload_max_2_d_Record Goods Receipt', [0,98, np.inf], \
-                       ['<=98', '>98'])
-numeric_to_categorical(new_df, 'workload_max_7_d_Record Invoice Receipt', [0,1089.5, np.inf], \
-                       ['<=1089.5', '>1089.5'])
-numeric_to_categorical(new_df, 'workload_max_7_d_Remove Payment Block', [0,1419, np.inf], \
-                       ['<=1419', '>1419'])
-numeric_to_categorical(new_df, 'workload_max_2_d_Remove Payment Block', [0,754.5, np.inf], \
-                       ['<=754.5', '>754.5'])
-numeric_to_categorical(new_df, 'workload_avg_2_d_Create Purchase Order Item', [0,263.5, np.inf], \
-                       ['<=263.5', '>263.5'])
-new_df['retrospective_POI'] = new_df['retrospective_POI'].astype('category')
+features = list(features_with_values['feature'].drop_duplicates())
+
+for i in range(0, len(features)):
+    
+    if features[i] in numericals_and_activities:
+        numeric_to_categorical(new_df, features[i])
+        
+#new_df['retrospective_POI'] = new_df['retrospective_POI'].astype('category')
 types = new_df.dtypes
-
 
 # %%
 y_column = 'is_compliant'
-important_columns = ['_case_Item_Category_', 'count_rework',  'CreateOrder_NetVal', \
-                     'number_of_orders_created_same_day_and_vendor', 'throughput_time_in_d',  \
-                     'process_cluster', 'number_of_handovers', 'Cancel Invoice Receipt', \
-                      'retrospective_POI',  'workload_max_2_d_Clear Invoice', 'workload_avg_7_d_Create Purchase Order Item', \
-                     '_case_Spend_classification_text_', '_case_Sub_spend_area_text_', \
-                     'Change Approval for Purchase Order', 'workload_avg_2_d_Record Goods Receipt', \
-                     'workload_avg_7_d_Change Quantity', 'workload_max_7_d_Change Price', 'workload_avg_7_d_Receive Order Confirmation', \
-                     'workload_max_2_d_Record Goods Receipt', 'workload_max_7_d_Record Invoice Receipt', \
-                     'workload_max_7_d_Remove Payment Block','workload_max_2_d_Remove Payment Block', \
-                     'workload_avg_2_d_Create Purchase Order Item', y_column]
 
-important_activities = ['Cancel Invoice Receipt']
-# %%
-#for item in important_activities:
-  #  numeric_to_categorical(new_df, item, [0, 0.5, np.inf], ['<=0.5', '>0.5'])
-numeric_to_categorical(new_df, 'Cancel Invoice Receipt', [0, 0.5, np.inf], \
-                       ['<=0.5', '>0.5'])
+important_columns = []
+
+for i in range(0, len(features)):
+    
+    if features[i] in numericals_and_activities:
+        important_columns.append(features[i])
+        
+for i in range(0, len(x_categorical_columns)):
+    if x_categorical_columns[i] in [element[0:len(x_categorical_columns[i])] for element in features]:
+        important_columns.append(x_categorical_columns[i])
+
 
 # %%
 i = 0
@@ -164,17 +193,15 @@ types = new_df.dtypes
 #%%
 y = 1 - df_result.filter(['is_compliant'])
 y['is_compliant'].unique()
-numeric_to_categorical(y, 'is_compliant', [0, 0.5, 1.5], ['compliant', 'not_compliant'])
+y = pd.cut(y['is_compliant'], [0, 0.5, 1.5], labels=['compliant', 'not_compliant'], \
+                                    right=False, include_lowest=True)
+#numeric_to_categorical(y, 'is_compliant', [0, 0.5, 1.5], ['compliant', 'not_compliant'])
 new_df.dtypes
 y.dtypes
 
-#%%
-#
-new_df = new_df.drop('is_compliant', axis = 1)
-
 
 #%%
-df_result['is_compliant'] = 1 - df_result.filter(['is_compliant'])
+#df_result['is_compliant'] = 1 - df_result.filter(['is_compliant'])
 
 base_value = df_result.filter(['is_compliant']).values.mean()
 
@@ -182,7 +209,7 @@ rel_columns = important_columns[:len(important_columns)-1]
 
 column = []
 value = []
-compliance_ratio = []
+incompliance_ratio = []
 change = []
 
 for i in range(0,len(rel_columns)):
@@ -191,9 +218,9 @@ for i in range(0,len(rel_columns)):
         column.append(col)
         value.append(j)
         ratio = df_result[new_df[col] == j].filter(['is_compliant']).values.mean()
-        compliance_ratio.append(ratio)
+        incompliance_ratio.append(ratio)
         change.append((ratio-base_value)/base_value)
         
-change_overview = pd.DataFrame({'column' : column, 'value': value, 'compliance_ratio': compliance_ratio, 'change': change})
+change_overview = pd.DataFrame({'column' : column, 'value': value, 'imcompl. ratio': incompliance_ratio, 'change to total incompl.': change})
 
-change_overview.to_csv('compliance_change_overview.csv')
+change_overview.to_csv('compliance_change_overview.csv', index = False)
